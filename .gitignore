@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+dist-ssr/
+*.local
+
+# Logs / cache
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.DS_Store
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+Thumbs.db
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Vercel
+.vercel
+
+# QA artifacts
+scripts/qa-output/
+
+# Design system gen (local)
+design-system/
+
+# Test / coverage
+coverage/
+.env*

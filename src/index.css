@@ -1,0 +1,406 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Light (DEFAULT) — pale green paper, deep forest ink */
+:root,
+html.light {
+  --bg: #edf6ee;
+  --panel: #ffffff;
+  --border: #bcd9c4;
+  --muted: #568f6f;
+  --accent: #264233;
+  --accent-soft: #3d6951;
+  --soft: #3d6951;
+  --pale: #6db58b;
+  --fg: #0d1c15;
+  --glow: rgba(109, 181, 139, 0.2);
+  --grid: rgba(13, 28, 21, 0.05);
+  --shadow: rgba(13, 28, 21, 0.14);
+  --spark: #6db58b; /* vibrant highlight, both modes */
+  color-scheme: light;
+}
+
+/* Dark — deep forest */
+html.dark {
+  --bg: #0d1c15;
+  --panel: #1a2e24;
+  --border: #3d6951;
+  --muted: #6a9078;
+  --accent: #6db58b;
+  --accent-soft: #87c4a0;
+  --soft: #a3d3b4;
+  --pale: #c0e3c9;
+  --fg: #ddf2de;
+  --glow: rgba(109, 181, 139, 0.16);
+  --grid: rgba(221, 242, 222, 0.035);
+  --shadow: rgba(0, 0, 0, 0.55);
+  --spark: #87c4a0;
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: "Manrope", system-ui, sans-serif;
+  font-feature-settings: "ss01" on, "cv11" on;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+::selection {
+  background: var(--pale);
+  color: var(--bg);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+.wrap {
+  @apply mx-auto w-full max-w-wrap px-4 sm:px-6 lg:px-8;
+}
+
+/* ── Type system (Oryzo-inspired: huge, confident, uppercase display) ── */
+
+.eyebrow {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-soft);
+}
+
+.display-huge {
+  font-family: "Syne", sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  font-size: clamp(1.85rem, 6.5vw, 4.25rem);
+  overflow-wrap: break-word;
+  max-width: 100%;
+  color: var(--fg);
+}
+
+/* Pin frames: clip everything — never paint into the next section */
+.pin-frame {
+  isolation: isolate;
+  background-color: var(--bg);
+}
+
+.pin-viewport {
+  height: 100vh;
+  height: 100svh;
+  max-height: 100svh;
+  overflow: hidden;
+  /* contain:paint broke pin fixed in some Chromium — keep layout only */
+  contain: layout;
+}
+
+.hero-pin,
+.statement-pin,
+.xp-pin {
+  position: relative;
+}
+
+.hero-sticky {
+  height: 100vh;
+  height: 100svh;
+}
+
+.statement-sticky {
+  height: 100vh;
+  height: 100svh;
+}
+
+/* Chapter stage never lets leftovers show outside */
+.chapter {
+  backface-visibility: hidden;
+}
+
+.section-title {
+  font-family: "Syne", sans-serif;
+  font-size: clamp(1.65rem, 3.2vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--fg);
+}
+
+.section-lead {
+  margin-top: 0.875rem;
+  max-width: 36rem;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--soft);
+}
+
+.section-pad {
+  @apply py-16 sm:py-24 lg:py-28;
+}
+
+.mono-tag {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+/* ── Surfaces & atmosphere ── */
+
+.grid-bg {
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.glow-mint {
+  background: radial-gradient(closest-side, var(--glow), transparent 72%);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--pale);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* overflow-clip for pinned word reveals */
+.line-mask {
+  overflow: hidden;
+  display: block;
+}
+
+/* ── Hero CSS stack (mirrors 3D progress; fallback when WebGL slow) ── */
+.css-stack {
+  position: relative;
+  width: min(220px, 46vw);
+  height: min(140px, 28vh);
+  margin: 0 auto;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--tip, 28deg)) rotateZ(-6deg) rotateY(var(--spin, 0deg));
+  perspective: 800px;
+}
+
+.css-stack--xl {
+  width: min(280px, 62%);
+  height: min(190px, 36svh);
+}
+
+.css-slab {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100%;
+  height: clamp(14px, 2.4vmin, 22px);
+  border-radius: 999px;
+  transform: translate(-50%, calc(-50% + (var(--o, 0) * var(--spread, 10px))));
+  box-shadow: 0 8px 24px -12px rgba(13, 28, 21, 0.45);
+  will-change: transform;
+  transition: filter 0.25s ease, opacity 0.25s ease;
+  opacity: 0.5;
+  filter: saturate(0.85);
+}
+
+.css-stack[data-active="0"] .css-slab[data-i="0"],
+.css-stack[data-active="1"] .css-slab[data-i="1"],
+.css-stack[data-active="2"] .css-slab[data-i="2"],
+.css-stack[data-active="3"] .css-slab[data-i="3"],
+.css-stack[data-active="4"] .css-slab[data-i="4"] {
+  opacity: 1;
+  filter: saturate(1.15) brightness(1.05);
+}
+
+.css-stack[data-active="-1"] .css-slab {
+  opacity: 1;
+  filter: none;
+}
+
+.hero-canvas.has-3d .css-stack,
+.hero-visual.has-3d .css-stack {
+  opacity: 0.22;
+}
+
+/* Stack LEFT · copy RIGHT — fixed layout */
+.hero-stage {
+  width: 100%;
+  min-height: 0;
+}
+
+.hero-visual {
+  min-height: min(30svh, 220px);
+  container-type: size;
+}
+
+.hero-canvas {
+  aspect-ratio: 5 / 4;
+  height: min(30svh, 220px);
+  max-height: 100%;
+  width: 100%;
+}
+
+.hero-copy {
+  min-height: min(38svh, 280px);
+}
+
+.hero-copy-inner {
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .hero-visual {
+    min-height: 0;
+    height: 100%;
+  }
+  .hero-canvas {
+    height: min(56svh, 440px);
+    max-width: min(100%, 480px);
+  }
+  .hero-copy {
+    height: 100%;
+    min-height: 0;
+  }
+  .hero-copy-inner {
+    text-align: left;
+    margin-inline: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-visual {
+    order: 1;
+  }
+  .hero-copy {
+    order: 2;
+  }
+}
+
+/* Short / landscape phones & tablets — keep stack framed, type readable */
+@media (max-height: 700px) {
+  .display-huge {
+    font-size: clamp(1.55rem, 5.5vh, 2.75rem);
+  }
+}
+
+@media (max-height: 540px), (orientation: landscape) and (max-height: 500px) {
+  .display-huge {
+    font-size: clamp(1.25rem, 4.6vh, 1.95rem);
+  }
+  .section-pad {
+    @apply py-10;
+  }
+  .hero-stage {
+    padding-top: 2.75rem;
+  }
+  .hero-canvas {
+    height: min(48svh, 200px) !important;
+    aspect-ratio: 4 / 3;
+  }
+  .hero-copy {
+    min-height: 0;
+    padding-bottom: 0.5rem;
+  }
+  .hero-copy .chapter-body {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+  }
+  .eyebrow {
+    font-size: 0.625rem;
+  }
+  .statement-sticky .wrap {
+    gap: 0.75rem;
+    padding-block: 0.5rem;
+  }
+  .st-stats {
+    padding-bottom: 0.5rem !important;
+    padding-top: 0.25rem !important;
+  }
+  .st-stat {
+    padding: 0.4rem 0.55rem !important;
+  }
+  .st-stat p:first-child {
+    font-size: 1rem !important;
+  }
+}
+
+/* Wide landscape: keep side-by-side even under ~768 if width allows */
+@media (orientation: landscape) and (max-height: 500px) and (min-width: 700px) {
+  .hero-stage {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  .hero-visual,
+  .hero-copy {
+    order: unset;
+    min-height: 0;
+    height: 100%;
+  }
+}
+
+/* Narrow phones */
+@media (max-width: 480px) {
+  .display-huge {
+    font-size: clamp(1.7rem, 8.5vw, 2.6rem);
+  }
+}
+
+/* Mobile career: no pin — let stacked cards flow (don't clip to 100svh) */
+@media (max-width: 767px) {
+  .xp-pin .pin-viewport {
+    height: auto;
+    max-height: none;
+    overflow: visible;
+    contain: none;
+  }
+  .xp-pin {
+    padding-block: 1.25rem 2.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .hero-canvas {
+    min-height: 36svh;
+  }
+
+  .st-stats {
+    margin-top: 1.5rem;
+  }
+
+  .statement-sticky {
+    height: auto;
+    min-height: 100svh;
+    max-height: none;
+  }
+}

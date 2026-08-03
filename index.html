@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Malcolm Cuady — Full-Stack Developer | Manila</title>
+    <meta
+      name="description"
+      content="Malcolm Joaquin L. Cuady — Lead Full-Stack Developer in Manila. I turn manual operations into digital systems: ordering, payments, queues, and AI platforms."
+    />
+    <meta name="theme-color" content="#EDF6EE" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230D1C15'/><circle cx='16' cy='16' r='7' fill='%236DB58B'/></svg>"
+    />
+  </head>
+  <body>
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("mc-theme");
+          if (t !== "light" && t !== "dark") t = "light";
+          document.documentElement.classList.add(t);
+          document.documentElement.dataset.theme = t;
+        } catch (e) {
+          document.documentElement.classList.add("light");
+        }
+      })();
+    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
