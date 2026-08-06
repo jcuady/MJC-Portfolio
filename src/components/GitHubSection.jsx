@@ -89,14 +89,20 @@ export default function GitHubSection() {
                     src={`https://github-readme-stats.vercel.app/api?username=${profile.githubUser}&show_icons=true&hide_border=true&bg_color=${statsBg}&text_color=${statsText}&title_color=${statsTitle}&icon_color=${statsIcon}`}
                     alt="GitHub statistics summary"
                     loading="lazy"
+                    decoding="async"
                     referrerPolicy="no-referrer"
                     className="w-full rounded-xl border border-deep/70"
                     onError={() => setStatsFailed(true)}
+                    onLoad={(e) => {
+                      // Upstream sometimes returns 503 HTML sized like an image; catch blank/tiny paints
+                      const img = e.currentTarget;
+                      if (img.naturalWidth < 40 || img.naturalHeight < 40) setStatsFailed(true);
+                    }}
                   />
                 )}
                 {langsFailed ? (
                   <p className="rounded-xl border border-deep/70 px-4 py-8 text-center font-mono text-sm text-soft">
-                    Language chart unavailable (upstream 503).{" "}
+                    Language chart unavailable (upstream).{" "}
                     <a href={profile.github} target="_blank" rel="noreferrer" className="text-mint underline">
                       Open GitHub
                     </a>
@@ -107,9 +113,14 @@ export default function GitHubSection() {
                     src={`https://github-readme-stats.vercel.app/api/top-langs/?username=${profile.githubUser}&layout=compact&hide_border=true&bg_color=${statsBg}&text_color=${statsText}&title_color=${statsTitle}`}
                     alt="Most used languages on GitHub"
                     loading="lazy"
+                    decoding="async"
                     referrerPolicy="no-referrer"
                     className="w-full rounded-xl border border-deep/70"
                     onError={() => setLangsFailed(true)}
+                    onLoad={(e) => {
+                      const img = e.currentTarget;
+                      if (img.naturalWidth < 40 || img.naturalHeight < 40) setLangsFailed(true);
+                    }}
                   />
                 )}
               </div>

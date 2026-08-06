@@ -26,8 +26,8 @@ export default function Footer() {
           <span className="text-spring">Let&apos;s ship it.</span>
         </motion.h2>
         <p className="mx-auto mt-5 max-w-md text-soft">
-          Open to full-time roles and select freelance builds — full-stack, AI
-          platforms, and operations systems.
+          Open to full-time full-stack, AI platform, and operations-engineering
+          roles. Happy to walk through shipped systems in an interview.
         </p>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
@@ -65,7 +65,7 @@ export default function Footer() {
         </div>
 
         <Separator className="mx-auto mt-16 max-w-md" />
-        <p className="mt-6 font-mono text-[11px] tracking-[0.16em] text-forest">
+        <p className="mt-6 font-mono text-xs tracking-[0.16em] text-forest">
           © {new Date().getFullYear()} {profile.name} · Manila
         </p>
       </div>

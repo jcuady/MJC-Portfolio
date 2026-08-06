@@ -9,8 +9,15 @@
     "preview": "vite preview",
     "verify:scroll": "node scripts/verify-scroll.mjs",
     "verify:overlap": "node scripts/verify-overlap.mjs",
+    "verify:hero-chapters": "node scripts/verify-hero-chapters.mjs",
+    "verify:mobile-stack": "node scripts/verify-mobile-stack.mjs",
+    "verify:hero-video": "node scripts/verify-hero-video.mjs",
     "verify:qa": "node scripts/verify-qa.mjs",
-    "verify": "node scripts/verify-scroll.mjs && node scripts/verify-overlap.mjs && node scripts/verify-qa.mjs"
+    "verify:responsive": "node scripts/verify-responsive.mjs",
+    "verify:parallax": "node scripts/verify-parallax.mjs",
+    "verify:parallax-visible": "node scripts/verify-parallax-visible.mjs",
+    "verify:seo": "node scripts/verify-seo.mjs",
+    "verify": "node scripts/verify-scroll.mjs && node scripts/verify-overlap.mjs && node scripts/verify-hero-chapters.mjs && node scripts/verify-mobile-stack.mjs && node scripts/verify-hero-video.mjs && node scripts/verify-seo.mjs && node scripts/verify-qa.mjs && node scripts/verify-responsive.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -29,6 +36,7 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
+    "png-to-ico": "^3.0.2",
     "postcss": "^8.4.49",
     "puppeteer-core": "^25.4.0",
     "tailwindcss": "^3.4.15",

@@ -61,12 +61,12 @@ function Slab({ color, index, progressRef, geo }) {
     const accent = accentAt(p, index);
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    mesh.current.position.x = accent * side * 0.32;
+    mesh.current.position.x = accent * side * 0.22;
     mesh.current.position.y =
       yBase * spread +
-      accent * 0.08 +
-      (reduce ? 0 : Math.sin(t * 0.45 + index) * 0.008 * (1 - accent));
-    mesh.current.position.z = accent * 0.18;
+      accent * 0.06 +
+      (reduce ? 0 : Math.sin(t * 0.45 + index) * 0.006 * (1 - accent));
+    mesh.current.position.z = accent * 0.12;
 
     mesh.current.rotation.x = (0.38 - unstack * 0.18) * 0.55;
     mesh.current.rotation.y =
@@ -99,7 +99,7 @@ function Slab({ color, index, progressRef, geo }) {
 function Rig({ progressRef }) {
   const group = useRef();
   // Compact discs — stay inside the left column frame at all orientations
-  const geo = useMemo(() => new THREE.CylinderGeometry(0.98, 0.98, 0.2, 40), []);
+  const geo = useMemo(() => new THREE.CylinderGeometry(0.9, 0.9, 0.18, 40), []);
 
   useFrame(() => {
     const p = progressRef.current?.p ?? 0;

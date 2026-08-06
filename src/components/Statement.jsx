@@ -1,59 +1,28 @@
-import { useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-import { stats } from "../data/profile.jsx";
-
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+import { useState } from "react";
+import { ArrowRight } from "lucide-react";
+import { projects } from "../data/profile.jsx";
+import SitePreview from "./SitePreview.jsx";
+import ConsultModal from "./ConsultModal.jsx";
+import { Button } from "./ui/button.jsx";
 
 const lines = ["Doesn't just", "write code."];
+const proofs = projects.filter((p) => p.featured).slice(0, 4);
 
-/**
- * Self-contained pin frame — all content in normal flow (no absolute escape).
- * overflow clipped so type never paints onto neighboring sections.
- */
+/** Statement — thesis + static live-ops strip + consult CTA. No parallax. */
 export default function Statement() {
-  const pinRef = useRef(null);
-
-  useGSAP(
-    () => {
-      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-      gsap.set(".st-line", { yPercent: 110 });
-      gsap.set(".st-copy, .st-stat", { autoAlpha: 0, y: 16 });
-
-      const tl = gsap.timeline({
-        defaults: { ease: "none" },
-        scrollTrigger: {
-          id: "statement",
-          trigger: pinRef.current,
-          start: "top top",
-          end: "+=160%",
-          pin: true,
-          pinSpacing: true,
-          pinType: "fixed",
-          scrub: reduce ? 0.1 : 0.55,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-          refreshPriority: -20,
-        },
-      });
-
-      tl.to(".st-line", { yPercent: 0, stagger: 0.1, duration: 0.28 }, 0.05)
-        .to(".st-copy", { autoAlpha: 1, y: 0, duration: 0.16 }, 0.38)
-        .to(".st-stat", { autoAlpha: 1, y: 0, stagger: 0.04, duration: 0.14 }, 0.55);
-    },
-    { scope: pinRef }
-  );
+  const [consultOpen, setConsultOpen] = useState(false);
 
   return (
-    <section ref={pinRef} className="statement-pin pin-frame relative z-0 bg-[var(--bg)]">
-      <div className="statement-sticky pin-viewport flex flex-col justify-center overflow-hidden">
-        <div className="wrap flex w-full flex-col gap-8 py-10 sm:gap-10 sm:py-14 lg:grid lg:grid-cols-[1.2fr_0.8fr] lg:items-center lg:gap-12">
+    <section
+      id="statement"
+      className="statement-pin pin-frame relative z-0 overflow-hidden bg-[var(--bg)]"
+    >
+      <div className="statement-sticky relative flex min-h-[100svh] flex-col justify-center py-16 sm:py-20">
+        <div className="wrap flex w-full flex-col gap-6 sm:gap-8 lg:grid lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:gap-12">
           <h2 className="display-huge" aria-label="Doesn't just write code.">
             {lines.map((line) => (
               <span key={line} className="line-mask">
-                <span className="st-line inline-block will-change-transform">{line}</span>
+                <span className="st-line inline-block">{line}</span>
               </span>
             ))}
           </h2>
@@ -63,27 +32,61 @@ export default function Statement() {
               Cafes taking orders on paper. Auto shops tracking queues on a
               whiteboard. Studios costing projects by hand. Malcolm analyzes the
               workflow, designs a custom system, ships the full stack, hardens it,
-              and stays to maintain it.
+              and stays to maintain it — then helps the next business scale the same
+              way.
             </p>
           </div>
         </div>
 
-        <div className="st-stats wrap mt-auto w-full pb-8 pt-4 sm:pb-10">
-          <div className="grid grid-cols-2 gap-2.5 sm:gap-3 md:grid-cols-4">
-            {stats.map((s) => (
-              <div
-                key={s.label}
-                className="st-stat rounded-xl border border-deep/60 bg-night/80 px-3 py-3 backdrop-blur-sm sm:px-4"
-              >
-                <p className="font-display text-xl font-bold sm:text-2xl" style={{ color: "var(--spark)" }}>
-                  {s.value}
-                </p>
-                <p className="mt-0.5 text-[11px] leading-snug text-soft sm:text-xs">{s.label}</p>
-              </div>
-            ))}
+        <div className="st-gallery wrap mt-8 w-full sm:mt-10" data-testid="proof-gallery">
+          <div className="mb-3">
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-soft">
+              Live ops → product
+            </p>
+          </div>
+
+          <div className="relative overflow-x-auto rounded-2xl border border-deep/50 bg-night/35 p-2 sm:p-3">
+            <div className="flex gap-3 sm:gap-4">
+              {proofs.map((p) => (
+                <article
+                  key={p.name}
+                  className="group relative w-[min(70vw,250px)] shrink-0 overflow-hidden rounded-xl border border-deep/70 bg-obsidian sm:w-[240px]"
+                >
+                  <div className="aspect-[16/10] overflow-hidden">
+                    <SitePreview project={p} className="h-full w-full object-cover" />
+                  </div>
+                  <div className="border-t border-deep/50 px-3 py-2.5">
+                    <p className="font-display text-sm font-bold text-mist">{p.name}</p>
+                    <p className="mt-0.5 text-xs leading-snug text-soft">
+                      {p.accent || p.kind}
+                    </p>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
         </div>
+
+        <div className="wrap mt-8 flex w-full flex-col gap-3 sm:mt-10 sm:flex-row sm:items-center">
+          <Button
+            type="button"
+            size="lg"
+            onClick={() => setConsultOpen(true)}
+            data-testid="consult-cta"
+          >
+            Book a consultation
+            <ArrowRight size={16} aria-hidden="true" />
+          </Button>
+          <Button asChild variant="outline" size="lg">
+            <a href="#projects">See shipped work</a>
+          </Button>
+          <p className="text-xs leading-relaxed text-soft sm:ml-2 sm:max-w-xs">
+            Demo a live system or plan a transformation for the ops you want to scale.
+          </p>
+        </div>
       </div>
+
+      <ConsultModal open={consultOpen} onClose={() => setConsultOpen(false)} />
     </section>
   );
 }

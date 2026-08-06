@@ -29,6 +29,11 @@ Thumbs.db
 
 # QA artifacts
 scripts/qa-output/
+scripts/out/
+
+# Unused / temp media
+public/photos/
+public/portraits/_tmp_*
 
 # Design system gen (local)
 design-system/

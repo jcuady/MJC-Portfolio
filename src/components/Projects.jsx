@@ -23,7 +23,7 @@ function ProjectCard({ project, index }) {
           <SitePreview project={project} className="aspect-[16/10] border-b border-deep/70" />
           <CardContent className="p-5 sm:p-6">
             <div className="flex items-center justify-between gap-3">
-              <span className="font-mono text-[11px] tracking-[0.16em] text-forest">
+              <span className="font-mono text-xs tracking-[0.16em] text-forest">
                 {project.index}
               </span>
               <Badge variant="default">{project.status}</Badge>
@@ -86,7 +86,7 @@ function FeaturedCase({ project, index }) {
       <div className={`feat-copy min-w-0 ${flip ? "md:text-right" : ""}`}>
         <p className="eyebrow">{project.accent || "Unique engagement"}</p>
         <div className={`mt-3 flex flex-wrap items-center gap-2 ${flip ? "md:justify-end" : ""}`}>
-          <span className="font-mono text-[11px] tracking-[0.16em] text-forest">{project.index}</span>
+          <span className="font-mono text-xs tracking-[0.16em] text-forest">{project.index}</span>
           <Badge variant="default">{project.status}</Badge>
         </div>
         <h3 className="mt-3 font-display text-2xl font-bold tracking-tight text-mist sm:text-3xl lg:text-[2.1rem]">

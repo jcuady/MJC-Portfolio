@@ -52,7 +52,7 @@ export const processLayers = [
   { id: "analyze", label: "Analyze", color: "#1d3728", short: "Map the workflow" },
   { id: "design", label: "Design", color: "#2a4a38", short: "Custom solution shape" },
   { id: "build", label: "Build", color: "#3d6951", short: "Ship the full stack" },
-  { id: "solve", label: "Solve", color: "#568f6f", short: "Unblock & harden" },
+  { id: "solve", label: "Solve", color: "#568f6f", short: "Create the solution" },
   { id: "deliver", label: "Deliver", color: "#6db58b", short: "Results in production" },
 ];
 
@@ -63,24 +63,24 @@ export const processLayers = [
 export const projects = [
   {
     name: "Kadokohi Coffee",
-    kind: "Solo Full-Stack PWA · Ongoing",
+    kind: "Solo Full-Stack PWA",
     url: "https://www.kadokohi.com/",
     preview: "/previews/kadokohi.png",
     index: "01",
-    status: "Live · Retainer",
+    status: "Live · Shipped",
     unique: true,
     accent: "Cafe → QR ordering + POS",
-    desc: "Solo-built and continuously maintain a Progressive Web App that replaced manual cafe ordering and cashier workflows with QR/online ordering, PayMongo payments, POS, and SMS/email automations. Ongoing retainer for feature work, SEO, and production support.",
+    desc: "Solo-built Progressive Web App that replaced manual cafe ordering and cashier workflows with QR/online ordering, PayMongo payments, POS, and SMS/email automations. Shipped end-to-end with production support and Playwright coverage.",
     stack: ["Next.js", "Supabase", "PayMongo", "Playwright"],
     featured: true,
   },
   {
     name: "Offgrid Lifestyle",
-    kind: "Solo Full-Stack E-Commerce · Ongoing",
+    kind: "Solo Full-Stack E-Commerce",
     url: "https://www.oglifestyleph.com/",
     preview: "/previews/offgrid.png",
     index: "02",
-    status: "Live · Retainer",
+    status: "Live · Shipped",
     unique: true,
     accent: "Merch → automated storefront",
     desc: "Solo-built merchandise e-commerce that replaced manual order-taking with an online storefront, PayMongo checkout, SMS status automation, and SEO — owned end-to-end on Next.js, Supabase, and Vercel.",
@@ -236,37 +236,37 @@ export const experience = [
     ],
   },
   {
-    role: "Freelance Full-Stack Developer (Solo)",
+    role: "Full-Stack Developer (Solo · Client)",
     org: "Kadokohi Coffee Shop",
     url: "https://www.kadokohi.com/",
-    period: "06/2026 — Present",
+    period: "2026",
     points: [
       "Solo-built PWA: QR/online ordering, POS, PayMongo, SMS/email automation on Next.js + Supabase",
-      "Ongoing retainer — features, SEO, Playwright E2E, and permanent cafe digital operations",
+      "Shipped Playwright E2E, SEO, and production operations for the cafe’s digital stack",
     ],
   },
   {
-    role: "Freelance Full-Stack Developer (Solo)",
+    role: "Full-Stack Developer (Solo · Client)",
     org: "Offgrid Lifestyle",
     url: "https://www.oglifestyleph.com/",
-    period: "06/2026 — Present",
+    period: "2026",
     points: [
       "Solo-built merch e-commerce: PayMongo checkout, SMS status automation, SEO on Next.js/Supabase/Vercel",
-      "Ongoing retainer — storefront, payments, and permanent digital ownership",
+      "Delivered storefront, payments, and end-to-end digital ownership for the brand",
     ],
   },
   {
-    role: "Freelance Full-Stack Developer (Solo)",
+    role: "Full-Stack Developer (Solo · Client)",
     org: "MGC Architecture",
     url: "https://www.mgcarchitecture.com/",
-    period: "2025 — Present",
+    period: "2025 — 2026",
     points: [
       "Solo digital transformation: portfolio, interactive cost calculator, inquiry flows, admin CMS",
       "Next.js, TypeScript, Tailwind, GSAP, and Supabase replacing manual inquiry and costing",
     ],
   },
   {
-    role: "Freelance CRM & Automation Developer",
+    role: "CRM & Automation Developer",
     org: "Sole Surgeon",
     period: "2025",
     points: [
@@ -275,7 +275,7 @@ export const experience = [
     ],
   },
   {
-    role: "Freelance Full-Stack Developer (Optrizo)",
+    role: "Full-Stack Developer (Optrizo)",
     org: "Hakum Auto Care",
     url: "https://www.hakumautocare.com/",
     period: "2024 — 2026",
@@ -364,10 +364,22 @@ export const education = {
   school: "De La Salle University, Manila",
   degree: "BS Information Technology",
   year: "2025",
+  logo: "/logos/dlsu.webp",
+  gpa: "≈ 3.00",
+  gpaPct: "≈ 90%",
   honors: [
     "1st Honors Dean's List (2024–2025)",
     "2nd Honors Dean's List (2023–2024)",
     "Co-founder, Data Science Society",
+  ],
+  electives: [
+    "Design Thinking",
+    "Systems Planning",
+    "System Continuity and Disaster Recovery",
+    "Secure SDLC",
+    "Project Management",
+    "Artificial Intelligence",
+    "Human–Computer Interaction (HCI)",
   ],
 };
 
@@ -383,7 +395,7 @@ export const certifications = [
 export const faq = [
   {
     q: "Are you open to full-time roles?",
-    a: "Yes. I'm open to full-time full-stack, web application, and product engineering roles in Metro Manila (hybrid or onsite), while maintaining a few ongoing freelance clients.",
+    a: "Yes. I'm looking for a full-time full-stack, web application, or product engineering seat in Metro Manila (hybrid or onsite). Portfolio products shown here were shipped as past client work.",
   },
   {
     q: "What do you specialize in?",
@@ -392,9 +404,5 @@ export const faq = [
   {
     q: "Can you share private / NDA work?",
     a: "NexBusinessBrain and the Nex SaaS suite are under NDA. I can walk through architecture, scope, and outcomes in an interview without confidential code or client data.",
-  },
-  {
-    q: "Do you still freelance?",
-    a: "Yes — Kadokohi Coffee and Offgrid Lifestyle are ongoing solo engagements. New freelance work is limited; priority is a strong full-time seat.",
   },
 ];

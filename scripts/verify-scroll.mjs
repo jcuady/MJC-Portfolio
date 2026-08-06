@@ -52,9 +52,10 @@ async function runPass(page, reduced) {
         if (!el) return { op: "0" };
         return { op: getComputedStyle(el).opacity };
       };
-      const stack = document.querySelector(".css-stack");
+      const tower = document.querySelector(".process-tower");
       return {
-        spread: parseFloat(stack?.style.getPropertyValue("--spread") || "0"),
+        fan: parseFloat(tower?.style.getPropertyValue("--fan") || "0"),
+        active: tower?.dataset?.active ?? null,
         intro: parseFloat(g(".chapter-intro").op),
         unstack: parseFloat(g(".chapter-unstack").op),
         analyze: parseFloat(g(".chapter-analyze").op),
@@ -69,13 +70,16 @@ async function runPass(page, reduced) {
   const d = await sample(0.86);
 
   const introFaded = a.intro > 0.7 && c.intro < 0.25;
-  const spreadGrew = Math.max(b.spread, c.spread, d.spread) > a.spread + 4;
+  const towerMoved =
+    Math.max(b.fan, c.fan, d.fan) > a.fan + 2 ||
+    (b.active !== a.active && b.active !== "-1") ||
+    (c.active !== a.active && c.active !== "-1");
   const storyMoved = b.unstack > 0.4 || c.analyze > 0.4 || d.deliver > 0.4;
 
   assert(introFaded, `[${reduced ? "reduce" : "motion"}] intro never fades`);
   assert(
-    spreadGrew,
-    `[${reduced ? "reduce" : "motion"}] stack spread static ${a.spread}→${c.spread}`
+    towerMoved,
+    `[${reduced ? "reduce" : "motion"}] process tower static fan ${a.fan}→${c.fan} active ${a.active}→${c.active}`
   );
   assert(storyMoved, `[${reduced ? "reduce" : "motion"}] no chapter text became visible`);
 

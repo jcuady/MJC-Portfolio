@@ -1,0 +1,5 @@
+# mjcuady.dev — Malcolm Joaquin L. Cuady
+User-agent: *
+Allow: /
+
+Sitemap: https://mjcuady.dev/sitemap.xml

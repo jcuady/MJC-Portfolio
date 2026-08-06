@@ -26,7 +26,7 @@ function MockPreview({ project }) {
         <div className="h-7 flex-1 rounded-full bg-[var(--accent)]/35" />
         <div className="h-7 w-20 rounded-full border border-[var(--border)]" />
       </div>
-      <p className="font-mono text-[10px] tracking-wider text-[var(--muted)]">
+      <p className="font-mono text-xs tracking-wider text-[var(--muted)]">
         {project.name}
       </p>
     </div>
@@ -64,7 +64,7 @@ export default function SitePreview({
           <span className="h-1.5 w-1.5 rounded-full bg-[var(--border)]" />
           <span className="h-1.5 w-1.5 rounded-full bg-[var(--border)]" />
           <span className="h-1.5 w-1.5 rounded-full bg-[var(--border)]" />
-          <span className="ml-2 truncate font-mono text-[10px] text-[var(--muted)]">
+          <span className="ml-2 truncate font-mono text-xs text-[var(--muted)]">
             {host}
           </span>
         </div>

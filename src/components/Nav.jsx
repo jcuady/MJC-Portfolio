@@ -6,6 +6,8 @@ import { Button } from "./ui/button.jsx";
 import { useTheme } from "../lib/theme.jsx";
 import { profile } from "../data/profile.jsx";
 
+import LogoMJC from "./LogoMJC.jsx";
+
 const links = [
   { href: "#projects", label: "Work" },
   { href: "#experience", label: "Experience" },
@@ -30,15 +32,16 @@ export default function Nav() {
       initial={{ y: -16, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed inset-x-0 top-0 z-50 border-b border-deep/50 bg-obsidian/80 backdrop-blur-xl"
+      className="fixed inset-x-0 top-0 z-50 border-b border-[color-mix(in_srgb,var(--deep)_35%,transparent)] bg-[color-mix(in_srgb,var(--bg)_92%,transparent)] backdrop-blur-xl"
     >
       <nav className="wrap flex h-14 items-center justify-between" aria-label="Primary">
         <a
           href="#top"
-          className="font-display text-sm font-bold tracking-tight text-mist"
+          className="flex items-center gap-3 transition-colors hover:opacity-80"
+          aria-label="Malcolm Cuady — home"
           onClick={() => setOpen(false)}
         >
-          <span className="text-spring">●</span> malcolm.cuady
+          <LogoMJC className="h-9 w-auto" markColor="var(--accent)" textColor="var(--fg)" />
         </a>
 
         <div className="hidden items-center gap-6 md:flex">
@@ -46,7 +49,7 @@ export default function Nav() {
             <a
               key={l.href}
               href={l.href}
-              className="font-mono text-[11px] uppercase tracking-[0.18em] text-soft transition-colors duration-200 hover:text-mist"
+              className="font-mono text-xs uppercase tracking-[0.18em] text-soft transition-colors duration-200 hover:text-mist"
             >
               {l.label}
             </a>

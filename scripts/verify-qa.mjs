@@ -64,10 +64,12 @@ async function main() {
 
   // ── Hero scrub live ──
   const heroA = await page.evaluate(() => {
-    const stack = document.querySelector(".css-stack");
+    const tower = document.querySelector(".process-tower");
     return {
-      spread: parseFloat(stack?.style.getPropertyValue("--spread") || "0"),
+      fan: parseFloat(tower?.style.getPropertyValue("--fan") || "0"),
+      active: tower?.dataset?.active ?? null,
       intro: parseFloat(getComputedStyle(document.querySelector(".chapter-intro")).opacity),
+      labels: [...document.querySelectorAll(".process-plate__label")].map((e) => e.textContent.trim()),
     };
   });
   await page.evaluate(() => {
@@ -77,16 +79,24 @@ async function main() {
   });
   await new Promise((r) => setTimeout(r, 700));
   const heroB = await page.evaluate(() => {
-    const stack = document.querySelector(".css-stack");
+    const tower = document.querySelector(".process-tower");
     return {
-      spread: parseFloat(stack?.style.getPropertyValue("--spread") || "0"),
+      fan: parseFloat(tower?.style.getPropertyValue("--fan") || "0"),
+      active: tower?.dataset?.active ?? null,
       analyze: parseFloat(getComputedStyle(document.querySelector(".chapter-analyze")).opacity),
       unstack: parseFloat(getComputedStyle(document.querySelector(".chapter-unstack")).opacity),
     };
   });
   await shot(page, "02-hero-mid");
   assert(heroA.intro > 0.7, `hero intro dead at top: ${heroA.intro}`);
-  assert(heroB.spread > heroA.spread + 4, `stack spread static ${heroA.spread}→${heroB.spread}`);
+  assert(
+    heroA.labels.join(",") === "Analyze,Design,Build,Solve,Deliver",
+    `tower labels wrong: ${heroA.labels.join(",")}`
+  );
+  assert(
+    heroB.fan > heroA.fan + 2 || (heroB.active !== "-1" && heroB.active !== heroA.active),
+    `process tower static fan ${heroA.fan}→${heroB.fan} active ${heroA.active}→${heroB.active}`
+  );
   assert(heroB.analyze > 0.4 || heroB.unstack > 0.4, "no chapter became visible mid-hero");
 
   // ── Experience entry: MUST be Step 01, not 10/10 ──

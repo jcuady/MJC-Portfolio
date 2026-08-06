@@ -32,12 +32,12 @@ export default function Experience() {
         let tl;
         let lastKey = "";
 
-        /** Pin spacers must be laid out — measuring during unpin poison start≈1800. */
+        /** Hero pin spacer must exist — measuring before pin layout poisons start Y. */
         const pinLayout = () => {
           const spacers = [...document.querySelectorAll(".pin-spacer")];
-          if (spacers.length < 2) return null;
+          if (spacers.length < 1) return null;
           const pinEnd = Math.max(...spacers.map((s) => s.offsetTop + s.offsetHeight));
-          if (pinEnd < window.innerHeight * 2.5) return null;
+          if (pinEnd < window.innerHeight * 2.2) return null;
           return { spacers, pinEnd };
         };
 
@@ -221,10 +221,10 @@ export default function Experience() {
                     <li key={job.period + job.org} className="flex items-start gap-2.5">
                       <span className="xp-dot mt-1 h-2.5 w-2.5 shrink-0 rounded-full border-2 border-spring bg-transparent" />
                       <div className="min-w-0">
-                        <p className="xp-num font-mono text-[10px] uppercase tracking-[0.14em] text-soft">
+                        <p className="xp-num font-mono text-xs uppercase tracking-[0.14em] text-soft">
                           {String(i + 1).padStart(2, "0")}
                         </p>
-                        <p className="mt-0.5 font-mono text-[9px] leading-tight text-forest lg:text-[10px]">
+                        <p className="mt-0.5 font-mono text-xs leading-tight text-forest lg:text-xs">
                           {job.period}
                         </p>
                       </div>
