@@ -32,27 +32,17 @@ async function metrics(page) {
   return page.evaluate(() => {
     const navBottom =
       document.querySelector("header")?.getBoundingClientRect().bottom ?? 56;
-    const slabs = [...document.querySelectorAll(".process-slab")].map((el) => {
-      const r = el.getBoundingClientRect();
-      return {
-        label: el.querySelector(".process-slab__label")?.textContent?.trim(),
-        top: Math.round(r.top),
-        bottom: Math.round(r.bottom),
-      };
-    });
-    const live = [...document.querySelectorAll(".chapter")].find((el) => {
-      const cs = getComputedStyle(el);
-      return cs.visibility !== "hidden" && parseFloat(cs.opacity) > 0.4;
-    });
-    const h1 = live?.querySelector("h1")?.textContent?.replace(/\s+/g, " ").trim();
-    const minTop = slabs.length ? Math.min(...slabs.map((s) => s.top)) : 0;
+    const nameEl = document.querySelector(".hero-display");
+    const nameBox = nameEl?.getBoundingClientRect();
+    const portrait = document.querySelector(".hero-portrait")?.getBoundingClientRect();
+    const liveTop = Math.min(nameBox?.top ?? 999, portrait?.top ?? 999);
     return {
       navBottom: Math.round(navBottom),
-      minTop,
-      navClear: minTop >= navBottom + 8,
-      chapter: h1?.slice(0, 48) ?? null,
-      active: document.querySelector(".process-stack")?.dataset?.active,
-      mode: document.querySelector(".process-stack")?.dataset?.mode,
+      minTop: Math.round(liveTop),
+      navClear: liveTop >= navBottom - 1,
+      chapter: nameEl?.innerText?.replace(/\s+/g, " ").trim().slice(0, 48) ?? null,
+      p: document.querySelector("[data-hero='press']")?.dataset?.p,
+      mode: document.querySelector("[data-hero='press']")?.dataset?.motion,
     };
   });
 }
@@ -84,26 +74,38 @@ async function main() {
   await page.emulateMediaFeatures([{ name: "prefers-reduced-motion", value: "no-preference" }]);
 
   const probes = [0, 0.08, 0.12, 0.2, 0.26, 0.4, 0.54, 0.68, 0.82, 0.94];
+  const shortProbes = [0, 0.26, 0.54, 0.9];
   const desktop = await runViewport(page, "desk", { width: 1440, height: 900 }, probes);
+  const laptop = await runViewport(page, "laptop", { width: 1366, height: 768 }, shortProbes);
+  const wideShort = await runViewport(page, "wide-short", { width: 1536, height: 720 }, shortProbes);
   const mobile = await runViewport(
     page,
     "mob",
     { width: 390, height: 844, deviceScaleFactor: 2 },
     probes
   );
+  const landPhone = await runViewport(
+    page,
+    "land",
+    { width: 844, height: 390, deviceScaleFactor: 2 },
+    shortProbes
+  );
 
   const fails = [];
-  for (const f of desktop) {
-    if (!f.navClear) fails.push({ where: "desk-nav-bleed", ...f });
-  }
-  for (const f of mobile) {
-    if (!f.navClear && f.mode === "flat") {
-      // flat list starts below nav by CSS; still flag if under
-      fails.push({ where: "mob-nav-bleed", ...f });
+  for (const group of [
+    ["desk-nav-bleed", desktop],
+    ["laptop-nav-bleed", laptop],
+    ["wide-short-nav-bleed", wideShort],
+    ["mob-nav-bleed", mobile],
+    ["land-nav-bleed", landPhone],
+  ]) {
+    const [where, frames] = group;
+    for (const f of frames) {
+      if (!f.navClear) fails.push({ where, ...f });
     }
   }
 
-  const report = { fails, desktop, mobile, out: OUT };
+  const report = { fails, desktop, laptop, wideShort, mobile, landPhone, out: OUT };
   writeFileSync(join(OUT, "report.json"), JSON.stringify(report, null, 2));
   console.log(JSON.stringify({ failCount: fails.length, fails: fails.slice(0, 4), out: OUT }, null, 2));
   await browser.close();

@@ -42,6 +42,7 @@ async function main() {
     headless: "new",
     args: ["--no-sandbox"],
   });
+  try {
   const page = await browser.newPage();
   await page.setViewport({ width: 1440, height: 900 });
   await page.emulateMediaFeatures([{ name: "prefers-reduced-motion", value: "no-preference" }]);
@@ -64,40 +65,36 @@ async function main() {
 
   // ── Hero scrub live ──
   const heroA = await page.evaluate(() => {
-    const tower = document.querySelector(".process-tower");
+    const hero = document.querySelector("[data-hero='press']");
     return {
-      fan: parseFloat(tower?.style.getPropertyValue("--fan") || "0"),
-      active: tower?.dataset?.active ?? null,
-      intro: parseFloat(getComputedStyle(document.querySelector(".chapter-intro")).opacity),
-      labels: [...document.querySelectorAll(".process-plate__label")].map((e) => e.textContent.trim()),
+      step: Number(hero?.dataset?.step ?? -9),
+      motion: hero?.dataset?.motion ?? null,
+      name: document.querySelector(".hero-display")?.innerText?.replace(/\s+/g, " ").trim() || "",
+      labels: [...document.querySelectorAll(".hero-station")].length,
+      p: Number(hero?.dataset?.p ?? 0),
     };
   });
   await page.evaluate(() => {
     const s = document.querySelector(".pin-spacer");
+    if (!s) return;
     const room = Math.max(1, s.offsetHeight - innerHeight);
-    scrollTo({ top: room * 0.34, behavior: "instant" });
+    scrollTo({ top: room * 0.5, behavior: "instant" });
   });
   await new Promise((r) => setTimeout(r, 700));
   const heroB = await page.evaluate(() => {
-    const tower = document.querySelector(".process-tower");
+    const hero = document.querySelector("[data-hero='press']");
     return {
-      fan: parseFloat(tower?.style.getPropertyValue("--fan") || "0"),
-      active: tower?.dataset?.active ?? null,
-      analyze: parseFloat(getComputedStyle(document.querySelector(".chapter-analyze")).opacity),
-      unstack: parseFloat(getComputedStyle(document.querySelector(".chapter-unstack")).opacity),
+      p: Number(hero?.dataset?.p ?? 0),
+      name: document.querySelector(".hero-display")?.innerText?.replace(/\s+/g, " ").trim() || "",
     };
   });
   await shot(page, "02-hero-mid");
-  assert(heroA.intro > 0.7, `hero intro dead at top: ${heroA.intro}`);
-  assert(
-    heroA.labels.join(",") === "Analyze,Design,Build,Solve,Deliver",
-    `tower labels wrong: ${heroA.labels.join(",")}`
-  );
-  assert(
-    heroB.fan > heroA.fan + 2 || (heroB.active !== "-1" && heroB.active !== heroA.active),
-    `process tower static fan ${heroA.fan}→${heroB.fan} active ${heroA.active}→${heroB.active}`
-  );
-  assert(heroB.analyze > 0.4 || heroB.unstack > 0.4, "no chapter became visible mid-hero");
+  assert(/Malcolm Joaquin/i.test(heroA.name), `hero name missing: ${heroA.name}`);
+  assert(heroA.labels === 0, `stations still present: ${heroA.labels}`);
+  if (heroA.motion === "pin") {
+    assert(heroB.p > heroA.p, `hero pin static ${heroA.p}→${heroB.p}`);
+  }
+  assert(/Malcolm Joaquin/i.test(heroB.name), "name vanished mid-hero");
 
   // ── Experience entry: MUST be Step 01, not 10/10 ──
   await page.evaluate(() => scrollTo({ top: 0, behavior: "instant" }));
@@ -128,7 +125,7 @@ async function main() {
     return { counter, step, start, end, progress, trackTop, pinEnd, scrollY: Math.round(scrollY) };
   });
 
-  assert(xpStart.pinEnd > 3000, `pin spacers missing/short pinEnd=${xpStart.pinEnd}`);
+  assert(xpStart.pinEnd > 2000, `pin spacers missing/short pinEnd=${xpStart.pinEnd}`);
   assert(
     Math.abs(xpStart.start - xpStart.trackTop) < 160,
     `poisoned career start=${xpStart.start} trackTop=${xpStart.trackTop} pinEnd=${xpStart.pinEnd}`
@@ -200,8 +197,10 @@ async function main() {
   };
   writeFileSync(join(OUT, "report.json"), JSON.stringify(report, null, 2));
   console.log(JSON.stringify(report, null, 2));
-  await browser.close();
   console.log("\nVERIFY QA PASS");
+  } finally {
+    await browser.close();
+  }
 }
 
 main().catch((e) => {

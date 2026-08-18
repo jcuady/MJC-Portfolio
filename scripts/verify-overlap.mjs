@@ -99,26 +99,24 @@ async function main() {
   await page.evaluate(() => scrollTo(0, 0));
   await new Promise((r) => setTimeout(r, 400));
   const heroPaint = await page.evaluate(() => {
-    const intro = document.querySelector(".chapter-intro");
-    const line = document.querySelector(".chapter-intro .chapter-line");
-    const copy = document.querySelector(".hero-copy");
-    if (!intro || !line || !copy) return { ok: false, reason: "missing" };
-    const ics = getComputedStyle(intro);
-    const lcs = getComputedStyle(line);
-    const cr = copy.getBoundingClientRect();
-    const lr = line.getBoundingClientRect();
+    const h1 = document.querySelector(".hero-display");
+    const lede = document.querySelector(".hero-lede");
+    if (!h1 || !lede) return { ok: false, reason: "missing" };
+    const hs = getComputedStyle(h1);
+    const hr = h1.getBoundingClientRect();
+    const lr = lede.getBoundingClientRect();
     return {
       ok:
-        parseFloat(ics.opacity) > 0.5 &&
-        ics.visibility !== "hidden" &&
-        lr.height > 28 &&
-        lr.width > 40 &&
-        cr.height > 120 &&
-        line.textContent.trim().length > 2,
-      copyH: Math.round(cr.height),
-      lineH: Math.round(lr.height),
-      opacity: ics.opacity,
-      text: line.textContent.trim().slice(0, 24),
+        parseFloat(hs.opacity) > 0.5 &&
+        hs.visibility !== "hidden" &&
+        hr.height > 28 &&
+        hr.width > 40 &&
+        lr.height > 80 &&
+        /Malcolm/i.test(h1.textContent),
+      copyH: Math.round(lr.height),
+      lineH: Math.round(hr.height),
+      opacity: hs.opacity,
+      text: h1.textContent.trim().slice(0, 24),
     };
   });
   if (!heroPaint.ok) fails.push({ where: "hero-blank", ...heroPaint });

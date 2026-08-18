@@ -1,8 +1,5 @@
 /**
- * Red-capable loop: hero scroll animation must NOT be static.
- * Tests BOTH prefers-reduced-motion modes (scrub must still work).
- *
- * Usage: node scripts/verify-scroll.mjs
+ * Hero press scroll: desktop pin must advance progress; reduced-motion stays static.
  */
 import puppeteer from "puppeteer-core";
 import { existsSync } from "fs";
@@ -12,86 +9,55 @@ const CHROME = [
   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
   "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
 ].find((p) => p && existsSync(p));
-
 const URL = process.env.PORTFOLIO_URL || "http://localhost:5173/";
 
 function assert(cond, msg) {
   if (!cond) throw new Error(msg);
 }
 
+async function sample(page, frac) {
+  await page.evaluate((f) => {
+    const spacer = document.querySelector(".pin-spacer");
+    if (!spacer) {
+      window.scrollTo({ top: 0, behavior: "instant" });
+      return;
+    }
+    const total = spacer.offsetHeight - window.innerHeight;
+    window.scrollTo({ top: Math.max(0, total * f), behavior: "instant" });
+  }, frac);
+  await new Promise((r) => setTimeout(r, 500));
+  return page.evaluate(() => {
+    const hero = document.querySelector("[data-hero='press']");
+    const name = document.querySelector(".hero-display")?.innerText?.replace(/\s+/g, " ").trim() || "";
+    return {
+      p: Number(hero?.dataset?.p ?? 0),
+      motion: hero?.dataset?.motion ?? null,
+      name,
+    };
+  });
+}
+
 async function runPass(page, reduced) {
   await page.emulateMediaFeatures([
-    {
-      name: "prefers-reduced-motion",
-      value: reduced ? "reduce" : "no-preference",
-    },
+    { name: "prefers-reduced-motion", value: reduced ? "reduce" : "no-preference" },
   ]);
   await page.goto(URL, { waitUntil: "networkidle0", timeout: 30000 });
-  await new Promise((r) => setTimeout(r, 1700));
+  await new Promise((r) => setTimeout(r, 1400));
 
-  const base = await page.evaluate(() => ({
-    pinSpacers: document.querySelectorAll(".pin-spacer").length,
-    hasHero: !!document.querySelector(".hero-pin"),
-    spacerH: document.querySelector(".pin-spacer")?.offsetHeight || 0,
-  }));
+  const a = await sample(page, 0);
+  const c = await sample(page, 0.5);
+  const d = await sample(page, 0.9);
+  assert(/Malcolm Joaquin/i.test(a.name), `[${reduced ? "reduce" : "motion"}] name missing`);
+  assert(/Malcolm Joaquin/i.test(d.name), `[${reduced ? "reduce" : "motion"}] name vanished`);
 
-  assert(base.hasHero, "Missing .hero-pin");
-  assert(base.pinSpacers >= 1, `No pin-spacer (pin dead). count=${base.pinSpacers}`);
-  assert(base.spacerH > 1100, `Pin spacer too short: ${base.spacerH}`);
+  if (reduced) {
+    assert(a.motion === "static", `reduce should be static, got ${a.motion}`);
+    return { mode: "reduce", a, c, d };
+  }
 
-  const sample = async (frac) => {
-    await page.evaluate((f) => {
-      const spacer = document.querySelector(".pin-spacer");
-      const total = spacer.offsetHeight - window.innerHeight;
-      window.scrollTo({ top: Math.max(0, total * f), behavior: "instant" });
-    }, frac);
-    await new Promise((r) => setTimeout(r, 550));
-    return page.evaluate(() => {
-      const g = (sel) => {
-        const el = document.querySelector(sel);
-        if (!el) return { op: "0" };
-        return { op: getComputedStyle(el).opacity };
-      };
-      const tower = document.querySelector(".process-tower");
-      return {
-        fan: parseFloat(tower?.style.getPropertyValue("--fan") || "0"),
-        active: tower?.dataset?.active ?? null,
-        intro: parseFloat(g(".chapter-intro").op),
-        unstack: parseFloat(g(".chapter-unstack").op),
-        analyze: parseFloat(g(".chapter-analyze").op),
-        deliver: parseFloat(g(".chapter-deliver").op),
-      };
-    });
-  };
-
-  const a = await sample(0);
-  const b = await sample(0.2);
-  const c = await sample(0.32);
-  const d = await sample(0.86);
-
-  const introFaded = a.intro > 0.7 && c.intro < 0.25;
-  const towerMoved =
-    Math.max(b.fan, c.fan, d.fan) > a.fan + 2 ||
-    (b.active !== a.active && b.active !== "-1") ||
-    (c.active !== a.active && c.active !== "-1");
-  const storyMoved = b.unstack > 0.4 || c.analyze > 0.4 || d.deliver > 0.4;
-
-  assert(introFaded, `[${reduced ? "reduce" : "motion"}] intro never fades`);
-  assert(
-    towerMoved,
-    `[${reduced ? "reduce" : "motion"}] process tower static fan ${a.fan}→${c.fan} active ${a.active}→${c.active}`
-  );
-  assert(storyMoved, `[${reduced ? "reduce" : "motion"}] no chapter text became visible`);
-
-  return {
-    mode: reduced ? "reduce" : "motion",
-    pinSpacers: base.pinSpacers,
-    spacerH: base.spacerH,
-    a,
-    b,
-    c,
-    d,
-  };
+  assert(a.motion === "pin", `motion should pin, got ${a.motion}`);
+  assert(c.p > a.p || d.p > a.p, `pin progress static ${a.p}→${c.p}→${d.p}`);
+  return { mode: "motion", a, c, d };
 }
 
 async function main() {
@@ -103,15 +69,12 @@ async function main() {
   });
   const page = await browser.newPage();
   await page.setViewport({ width: 1440, height: 900 });
-
   const res = await page.goto(URL, { waitUntil: "domcontentloaded", timeout: 15000 }).catch((e) => {
     throw new Error(`localhost down at ${URL}: ${e.message}`);
   });
   assert(res?.status() === 200, `HTTP ${res?.status()}`);
-
   const motion = await runPass(page, false);
   const reduce = await runPass(page, true);
-
   console.log(JSON.stringify({ motion, reduce }, null, 2));
   await browser.close();
   console.log("\nVERIFY PASS — scroll story live under both motion prefs");

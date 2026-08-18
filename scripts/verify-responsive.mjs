@@ -44,19 +44,17 @@ async function shot(page, name) {
 
 async function heroMetrics(page) {
   return page.evaluate(() => {
-    const name = [...document.querySelectorAll(".chapter-intro .chapter-line")]
-      .map((e) => e.textContent.trim())
-      .join(" ");
+    const name = (document.querySelector(".hero-display")?.innerText || "").replace(/\s+/g, " ").trim();
     const hint = document.querySelector(".hero-portrait-hint")?.textContent?.trim() || "";
     const pressed = document.querySelector(".hero-portrait")?.getAttribute("aria-pressed");
     const portraitBtn = document.querySelector(".hero-portrait");
     const grad = document.querySelector(".hero-portrait img[data-shot='grad']");
     const barong = document.querySelector(".hero-portrait img[data-shot='barong']");
-    const chapter = document.querySelector(".chapter-intro");
+    const chapter = document.querySelector(".hero-lede");
     const cr = chapter?.getBoundingClientRect();
     const heroPin = document.querySelector(".hero-pin");
     const heroTop = heroPin?.getBoundingClientRect()?.top ?? 999;
-    const nameEl = document.querySelector(".chapter-intro .hero-name, .chapter-intro h1");
+    const nameEl = document.querySelector(".hero-display");
     const nameInView = Boolean(
       nameEl &&
         (() => {
@@ -149,10 +147,10 @@ async function main() {
     });
     await new Promise((r) => setTimeout(r, 400));
     // Portrait must exist in intro chapter
-    await page.waitForSelector(".chapter-intro [data-shot='grad']", { timeout: 10000 });
+    await page.waitForSelector(".hero-portrait [data-shot='grad']", { timeout: 10000 });
     await page.waitForFunction(
       () => {
-        const img = document.querySelector(".chapter-intro [data-shot='grad']");
+        const img = document.querySelector(".hero-portrait [data-shot='grad']");
         return img && img.naturalWidth > 0;
       },
       { timeout: 10000 }
@@ -163,59 +161,52 @@ async function main() {
     await shot(page, shotName);
     report.shots.push(shotName);
 
-    // Hero shot must actually show the intro (metrics must not scroll away first)
     if (m.scrollY > 40 || m.heroTop > 80 || !m.nameInView) {
       report.fails.push({ vp: vp.id, where: "hero-not-in-viewport", m });
     }
     if (!/Malcolm Joaquin/i.test(m.name) || !/Cuady/i.test(m.name)) {
       report.fails.push({ vp: vp.id, where: "hero-name", m });
     }
-    // Intro must NOT show the old operations tagline — CTA only
     const tagline = await page.evaluate(() => {
-      const body = document.querySelector(".chapter-intro .chapter-body");
+      const body = document.querySelector(".hero-hook");
       return body ? body.textContent.trim() : "";
     });
-    if (/manual operations/i.test(tagline) || /five layers from messy/i.test(tagline)) {
+    if (/five layers from messy/i.test(tagline)) {
       report.fails.push({ vp: vp.id, where: "intro-tagline-still-present", tagline });
     }
-    if (tagline.length > 0) {
-      report.fails.push({ vp: vp.id, where: "intro-body-should-be-empty", tagline });
+    if (!/digital systems/i.test(tagline)) {
+      report.fails.push({ vp: vp.id, where: "intro-thesis-missing", tagline });
     }
     const hasCta = await page.evaluate(
-      () => !!document.querySelector(".chapter-intro .chapter-cta a[href='#projects']")
+      () => !!document.querySelector(".hero-cta a[href='#projects']")
     );
     if (!hasCta) report.fails.push({ vp: vp.id, where: "intro-cta-missing" });
     const ctaInView = await page.evaluate(() => {
-      const cta = document.querySelector(".chapter-intro .chapter-cta");
+      const cta = document.querySelector(".hero-cta");
       if (!cta) return false;
       const r = cta.getBoundingClientRect();
       const visible = Math.min(r.bottom, innerHeight) - Math.max(r.top, 0);
       return visible > 20;
     });
     if (!ctaInView) report.fails.push({ vp: vp.id, where: "intro-cta-clipped" });
-    // Tagline must not appear anywhere in the pinned hero viewport text
     const heroText = await page.evaluate(() => {
       const pin = document.querySelector(".hero-sticky");
       return (pin?.innerText || "").replace(/\s+/g, " ");
     });
-    if (/manual operations/i.test(heroText) || /five layers from messy/i.test(heroText)) {
+    if (/five layers from messy/i.test(heroText)) {
       report.fails.push({ vp: vp.id, where: "intro-tagline-in-viewport-text" });
     }
-    // Process tower must be labeled and in the hero viewport
-    const towerOk = await page.evaluate(() => {
-      const tower = document.querySelector(".process-tower");
-      const labels = [...document.querySelectorAll(".process-plate__label")].map((e) =>
-        e.textContent.trim()
+    const processOk = await page.evaluate((landscape) => {
+      const stations = document.querySelectorAll(".hero-station").length;
+      const banned = /Hear the operation|Hear · Shape|Leave it live/i.test(
+        document.querySelector(".hero-sticky")?.innerText || ""
       );
-      const r = tower?.getBoundingClientRect();
-      const visible = r && r.width > 40 && r.bottom > 40 && r.top < innerHeight;
-      return {
-        visible: Boolean(visible),
-        labels,
-        ok: visible && labels.join(",") === "Analyze,Design,Build,Solve,Deliver",
-      };
-    });
-    if (!towerOk.ok) report.fails.push({ vp: vp.id, where: "process-tower", towerOk });
+      const press = document.querySelector(".hero-press");
+      const r = press?.getBoundingClientRect();
+      const painted = r && r.width > 40 && r.height > 40 && r.bottom > 40 && r.top < innerHeight;
+      return { stations, banned, painted, ok: stations === 0 && !banned && (landscape || painted) };
+    }, vp.height < 500);
+    if (!processOk.ok) report.fails.push({ vp: vp.id, where: "process-stations-removed", processOk });
     if (!m.portraitOk || !m.introVisible) {
       report.fails.push({ vp: vp.id, where: "hero-portrait", m });
     }

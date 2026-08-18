@@ -14,16 +14,19 @@ export default function HeroPortrait() {
 
   useEffect(() => {
     const hoverMq = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const narrowMq = window.matchMedia("(max-width: 767px)");
     const reduceMq = window.matchMedia("(prefers-reduced-motion: reduce)");
     const sync = () => {
-      setFinePointer(hoverMq.matches);
+      setFinePointer(hoverMq.matches && !narrowMq.matches);
       setReduce(reduceMq.matches);
     };
     sync();
     hoverMq.addEventListener("change", sync);
+    narrowMq.addEventListener("change", sync);
     reduceMq.addEventListener("change", sync);
     return () => {
       hoverMq.removeEventListener("change", sync);
+      narrowMq.removeEventListener("change", sync);
       reduceMq.removeEventListener("change", sync);
     };
   }, []);
@@ -49,7 +52,7 @@ export default function HeroPortrait() {
     <div className="hero-portrait-wrap">
       <button
         type="button"
-        className="hero-portrait group relative block w-[min(38vw,148px)] cursor-pointer overflow-hidden rounded-[1.15rem] border border-deep/70 bg-night text-left shadow-[0_10px_28px_-16px_rgba(13,28,21,0.55)] outline-none transition-[box-shadow] duration-300 focus-visible:ring-2 focus-visible:ring-[var(--pale)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)] sm:w-[176px] md:w-[200px] lg:w-[220px]"
+        className="hero-portrait group relative block cursor-pointer overflow-hidden rounded-[1.15rem] border border-deep/70 bg-night text-left shadow-[0_10px_28px_-16px_rgba(13,28,21,0.55)] outline-none transition-[box-shadow] duration-300 focus-visible:ring-2 focus-visible:ring-[var(--pale)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)]"
         aria-label={`${profile.name} — ${
           finePointer ? "hover to see Barong portrait" : "tap to switch portraits"
         }`}

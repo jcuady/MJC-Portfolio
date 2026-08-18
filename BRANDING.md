@@ -14,7 +14,7 @@ Source of truth for the portfolio landing page. Built from the green monochrome 
 > From manual to digital — full-stack systems for real businesses.
 
 **Differentiation (the ONE memorable thing)**  
-A pale-green, light-first UI (Oryzo/Lusion-inspired) with one signature object: a **Three.js "full stack"** — three green slabs (frontend / backend / data) that unstack in a scroll-pinned hero. The pun is the brand: he literally ships the full stack.
+A pale-green, light-first UI with one signature object: a **scroll-locked schematic assembly**. Five plates (Map / Shape / Wire / Solve / Live) lock together while the story explains how he builds. The pin holds until the system is assembled.
 
 ---
 

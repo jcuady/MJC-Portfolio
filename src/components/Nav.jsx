@@ -6,8 +6,6 @@ import { Button } from "./ui/button.jsx";
 import { useTheme } from "../lib/theme.jsx";
 import { profile } from "../data/profile.jsx";
 
-import LogoMJC from "./LogoMJC.jsx";
-
 const links = [
   { href: "#projects", label: "Work" },
   { href: "#experience", label: "Experience" },
@@ -41,7 +39,7 @@ export default function Nav() {
           aria-label="Malcolm Cuady — home"
           onClick={() => setOpen(false)}
         >
-          <LogoMJC className="h-9 w-auto" markColor="var(--accent)" textColor="var(--fg)" />
+          <span className="nav-wordmark">Malcolm Cuady</span>
         </a>
 
         <div className="hidden items-center gap-6 md:flex">

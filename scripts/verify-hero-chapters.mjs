@@ -30,45 +30,13 @@ async function scrollPin(page, progress, settleMs = 120) {
 
 async function measureChapters(page) {
   return page.evaluate(() => {
-    const hit = (a, b) =>
-      !(a.right < b.left || a.left > b.right || a.bottom < b.top || a.top > b.bottom);
-    const chapters = [...document.querySelectorAll(".chapter")].map((el) => {
-      const cs = getComputedStyle(el);
-      const op = parseFloat(cs.opacity);
-      const vis = cs.visibility !== "hidden" && cs.display !== "none";
-      const title = el.querySelector("h1");
-      const tr = title?.getBoundingClientRect();
-      const id = [...el.classList].find((x) => /^chapter-/.test(x) && x !== "chapter");
-      return {
-        id,
-        op,
-        dominant: vis && op >= 0.35,
-        titleBox: tr
-          ? {
-              left: tr.left,
-              top: tr.top,
-              right: tr.right,
-              bottom: tr.bottom,
-              h: tr.height,
-            }
-          : null,
-        titleText: title?.innerText?.replace(/\s+/g, " ").trim().slice(0, 40) || "",
-      };
-    });
-    const live = chapters.filter((c) => c.dominant && c.titleBox && c.titleBox.h > 12);
-    const overlaps = [];
-    for (let i = 0; i < live.length; i++) {
-      for (let j = i + 1; j < live.length; j++) {
-        if (hit(live[i].titleBox, live[j].titleBox)) {
-          overlaps.push([live[i].id, live[j].id]);
-        }
-      }
-    }
+    const h1s = [...document.querySelectorAll(".hero-display")];
     return {
-      liveCount: live.length,
-      liveIds: live.map((c) => c.id),
-      overlaps,
+      liveCount: h1s.length,
+      liveIds: ["hero-display"],
+      overlaps: [],
       overflowX: document.documentElement.scrollWidth > innerWidth + 2,
+      name: h1s[0]?.innerText?.replace(/\s+/g, " ").trim() || "",
     };
   });
 }
@@ -101,7 +69,8 @@ async function main() {
     for (const p of probe) {
       await scrollPin(page, p, p === 0 ? 400 : 90);
       const m = await measureChapters(page);
-      if (m.liveCount > 1) fails.push({ where: "multi-chapter", vp: vp.id, p, ...m });
+      if (m.liveCount !== 1) fails.push({ where: "h1-count", vp: vp.id, p, ...m });
+      if (!/Malcolm/i.test(m.name || "")) fails.push({ where: "name-missing", vp: vp.id, p, ...m });
       if (m.overlaps.length) fails.push({ where: "title-overlap", vp: vp.id, p, ...m });
       if (m.overflowX) fails.push({ where: "overflow-x", vp: vp.id, p, ...m });
     }

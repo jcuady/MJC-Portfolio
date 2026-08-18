@@ -42,9 +42,9 @@ export const profile = {
 
 export const stats = [
   { value: "8+", label: "SaaS platforms shipped" },
-  { value: "30+", label: "engineers mentored" },
+  { value: "30+", label: "interns mentored" },
   { value: "4", label: "live client products" },
-  { value: "2025", label: "DLSU graduate, Dean's List" },
+  { value: "2026", label: "DLSU graduate, Dean's List" },
 ];
 
 /** Process layers shown in the hero stack (bottom → top visually accented). */
