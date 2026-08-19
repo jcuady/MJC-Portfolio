@@ -65,7 +65,7 @@ async function main() {
 
   // ── Hero scrub live ──
   const heroA = await page.evaluate(() => {
-    const hero = document.querySelector("[data-hero='press']");
+    const hero = document.querySelector("[data-hero='bento']");
     return {
       step: Number(hero?.dataset?.step ?? -9),
       motion: hero?.dataset?.motion ?? null,
@@ -82,19 +82,19 @@ async function main() {
   });
   await new Promise((r) => setTimeout(r, 700));
   const heroB = await page.evaluate(() => {
-    const hero = document.querySelector("[data-hero='press']");
+    const hero = document.querySelector("[data-hero='bento']");
     return {
       p: Number(hero?.dataset?.p ?? 0),
       name: document.querySelector(".hero-display")?.innerText?.replace(/\s+/g, " ").trim() || "",
     };
   });
   await shot(page, "02-hero-mid");
-  assert(/Malcolm Joaquin/i.test(heroA.name), `hero name missing: ${heroA.name}`);
+  assert(/Building systems/i.test(heroA.name), `hero headline missing: ${heroA.name}`);
   assert(heroA.labels === 0, `stations still present: ${heroA.labels}`);
   if (heroA.motion === "pin") {
     assert(heroB.p > heroA.p, `hero pin static ${heroA.p}→${heroB.p}`);
   }
-  assert(/Malcolm Joaquin/i.test(heroB.name), "name vanished mid-hero");
+  assert(/Building systems/i.test(heroB.name), "headline vanished mid-hero");
 
   // ── Experience entry: MUST be Step 01, not 10/10 ──
   await page.evaluate(() => scrollTo({ top: 0, behavior: "instant" }));
@@ -125,7 +125,7 @@ async function main() {
     return { counter, step, start, end, progress, trackTop, pinEnd, scrollY: Math.round(scrollY) };
   });
 
-  assert(xpStart.pinEnd > 2000, `pin spacers missing/short pinEnd=${xpStart.pinEnd}`);
+  assert(xpStart.trackTop > 800, `experience too high trackTop=${xpStart.trackTop}`);
   assert(
     Math.abs(xpStart.start - xpStart.trackTop) < 160,
     `poisoned career start=${xpStart.start} trackTop=${xpStart.trackTop} pinEnd=${xpStart.pinEnd}`

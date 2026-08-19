@@ -161,7 +161,8 @@ export default function Projects() {
   );
 
   return (
-    <section id="projects" ref={root} className="section-pad relative">
+    <section id="work" ref={root} className="section-pad relative">
+      <span id="projects" className="sr-only" />
       <div className="wrap">
         <p className="eyebrow">
           Shipped work&nbsp;&nbsp;[ {String(projects.length).padStart(2, "0")} ]

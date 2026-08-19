@@ -70,7 +70,7 @@ async function main() {
       await scrollPin(page, p, p === 0 ? 400 : 90);
       const m = await measureChapters(page);
       if (m.liveCount !== 1) fails.push({ where: "h1-count", vp: vp.id, p, ...m });
-      if (!/Malcolm/i.test(m.name || "")) fails.push({ where: "name-missing", vp: vp.id, p, ...m });
+      if (!/Building systems/i.test(m.name || "")) fails.push({ where: "headline-missing", vp: vp.id, p, ...m });
       if (m.overlaps.length) fails.push({ where: "title-overlap", vp: vp.id, p, ...m });
       if (m.overflowX) fails.push({ where: "overflow-x", vp: vp.id, p, ...m });
     }

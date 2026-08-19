@@ -112,7 +112,7 @@ async function main() {
         hr.height > 28 &&
         hr.width > 40 &&
         lr.height > 80 &&
-        /Malcolm/i.test(h1.textContent),
+        /Building systems/i.test(h1.textContent),
       copyH: Math.round(lr.height),
       lineH: Math.round(hr.height),
       opacity: hs.opacity,

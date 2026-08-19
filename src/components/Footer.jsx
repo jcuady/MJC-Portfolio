@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Mail, Phone, FileDown } from "lucide-react";
-import { FaGithub } from "react-icons/fa";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { Button } from "./ui/button.jsx";
 import { Separator } from "./ui/separator.jsx";
 import { profile } from "../data/profile.jsx";
@@ -49,6 +49,15 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-6 text-sm text-soft">
+          <a
+            href={profile.linkedin}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 transition-colors hover:text-mist"
+          >
+            <FaLinkedin size={16} aria-hidden="true" />
+            LinkedIn
+          </a>
           <a
             href={profile.github}
             target="_blank"

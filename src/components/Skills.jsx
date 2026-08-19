@@ -17,14 +17,16 @@ const chipVariants = {
 
 export default function Skills() {
   return (
-    <section id="skills" className="section-pad relative">
+    <section id="stack" className="section-pad relative">
+      <span id="skills" className="sr-only" />
       <div className="glow-mint absolute -left-40 top-1/4 h-[55vmin] w-[55vmin] opacity-60" aria-hidden="true" />
       <div className="wrap relative">
         <p className="eyebrow">Capabilities</p>
         <h2 className="section-title mt-3">Stack</h2>
         <p className="section-lead">
-          Frontend, backend, data, and automation — plus AI-assisted delivery
-          with Claude, ChatGPT, and Cursor.
+          Frontend, backend, data, and automation, plus delivery ownership across
+          planning, reviews, and stakeholder work. AI-assisted with Claude, ChatGPT,
+          and Cursor.
         </p>
 
         <div className="mt-12 grid gap-4 lg:grid-cols-2">
@@ -51,7 +53,7 @@ export default function Skills() {
                         whileHover={{ y: -2 }}
                         className="inline-flex items-center gap-2 rounded-xl border border-deep/80 bg-obsidian/40 px-3.5 py-2.5 text-sm text-mist transition-colors hover:border-mint/40"
                       >
-                        <Icon size={16} style={{ color }} aria-hidden="true" />
+                        {Icon ? <Icon size={16} style={{ color }} aria-hidden="true" /> : null}
                         {name}
                       </motion.span>
                     ))}

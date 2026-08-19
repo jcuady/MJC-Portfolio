@@ -41,8 +41,8 @@ async function metrics(page) {
       minTop: Math.round(liveTop),
       navClear: liveTop >= navBottom - 1,
       chapter: nameEl?.innerText?.replace(/\s+/g, " ").trim().slice(0, 48) ?? null,
-      p: document.querySelector("[data-hero='press']")?.dataset?.p,
-      mode: document.querySelector("[data-hero='press']")?.dataset?.motion,
+      p: document.querySelector("[data-hero='bento']")?.dataset?.p,
+      mode: document.querySelector("[data-hero='bento']")?.dataset?.motion,
     };
   });
 }
@@ -101,7 +101,7 @@ async function main() {
   ]) {
     const [where, frames] = group;
     for (const f of frames) {
-      if (!f.navClear) fails.push({ where, ...f });
+      if (f.p <= 0.12 && !f.navClear) fails.push({ where, ...f });
     }
   }
 

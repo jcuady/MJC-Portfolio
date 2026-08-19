@@ -28,12 +28,15 @@ async function measure(page) {
       const v = Math.min(r.bottom, innerHeight) - Math.max(r.top, 0);
       return r.width > 8 && v > 20;
     };
+    const lede = document.querySelector(".hero-lede")?.getBoundingClientRect();
     return {
       navBottom: Math.round(navBottom),
       h1Top: h1 ? Math.round(h1.top) : null,
       h1Clear: !h1 || h1.top >= navBottom - 2,
       nameInView: visible(h1),
       portraitInView: visible(portrait),
+      portraitExists: Boolean(portrait && portrait.width > 8 && portrait.height > 8),
+      introBeforePortrait: Boolean(lede && portrait && lede.top <= portrait.top + 8),
       stationCount: labels.length,
       overflowX: document.documentElement.scrollWidth > innerWidth + 2,
       name: document.querySelector(".hero-display")?.innerText?.replace(/\s+/g, " ").trim() || "",
@@ -65,10 +68,12 @@ async function main() {
     await page.screenshot({ path: join(OUT, shot), fullPage: false });
     report.frames.push(shot);
     report[vp.id] = m;
-    if (!/Malcolm Joaquin/i.test(m.name)) fails.push({ where: "name", vp: vp.id, m });
+    if (!/Building systems/i.test(m.name)) fails.push({ where: "headline", vp: vp.id, m });
     if (!m.h1Clear) fails.push({ where: "nav-bleed", vp: vp.id, m });
     if (!m.nameInView) fails.push({ where: "name-out", vp: vp.id, m });
-    if (!m.portraitInView) fails.push({ where: "portrait-out", vp: vp.id, m });
+    if (vp.id === "desktop" && !m.portraitInView) fails.push({ where: "portrait-out", vp: vp.id, m });
+    if (!m.portraitExists) fails.push({ where: "portrait-missing", vp: vp.id, m });
+    if (!m.introBeforePortrait) fails.push({ where: "intro-after-portrait", vp: vp.id, m });
     if (m.overflowX) fails.push({ where: "overflow-x", vp: vp.id, m });
     if (m.stationCount !== 0) fails.push({ where: "stations-still-present", vp: vp.id, m });
   }

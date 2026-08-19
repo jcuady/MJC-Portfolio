@@ -35,8 +35,8 @@ export default function HeroPortrait() {
     const el = frameRef.current;
     if (!el || reduce) return;
     gsap.to(el, {
-      y: on ? -6 : 0,
-      scale: on ? 1.03 : 1,
+      y: on ? -3 : 0,
+      scale: on ? 1.015 : 1,
       duration: on ? 0.28 : 0.22,
       ease: on ? "power2.out" : "power2.inOut",
       overwrite: "auto",
@@ -49,10 +49,10 @@ export default function HeroPortrait() {
   };
 
   return (
-    <div className="hero-portrait-wrap">
+    <figure className="hero-portrait-wrap">
       <button
         type="button"
-        className="hero-portrait group relative block cursor-pointer overflow-hidden rounded-[1.15rem] border border-deep/70 bg-night text-left shadow-[0_10px_28px_-16px_rgba(13,28,21,0.55)] outline-none transition-[box-shadow] duration-300 focus-visible:ring-2 focus-visible:ring-[var(--pale)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)]"
+        className="hero-portrait group relative block w-full cursor-pointer overflow-hidden bg-night text-left outline-none transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] focus-visible:ring-2 focus-visible:ring-[var(--pale)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)] active:scale-[0.99]"
         aria-label={`${profile.name} — ${
           finePointer ? "hover to see Barong portrait" : "tap to switch portraits"
         }`}
@@ -108,12 +108,12 @@ export default function HeroPortrait() {
             />
           </picture>
           <span
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[rgba(13,28,21,0.45)] to-transparent"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-[22%] bg-gradient-to-t from-[rgba(13,28,21,0.28)] to-transparent"
             aria-hidden="true"
           />
         </div>
       </button>
-      <p className="hero-portrait-hint mt-2 font-mono text-xs tracking-[0.14em] text-forest">
+      <figcaption className="hero-portrait-hint">
         {showBarong
           ? finePointer
             ? "Barong · move away to return"
@@ -121,7 +121,7 @@ export default function HeroPortrait() {
           : finePointer
             ? "Grad · hover for Barong"
             : "Grad · tap for Barong"}
-      </p>
-    </div>
+      </figcaption>
+    </figure>
   );
 }

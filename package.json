@@ -19,7 +19,9 @@
     "verify:parallax-visible": "node scripts/verify-parallax-visible.mjs",
     "verify:seo": "node scripts/verify-seo.mjs",
     "verify:hero": "node scripts/verify-hero.mjs",
-    "verify": "node scripts/verify-hero.mjs && node scripts/verify-cutout.mjs && node scripts/verify-scroll.mjs && node scripts/verify-overlap.mjs && node scripts/verify-hero-chapters.mjs && node scripts/verify-mobile-stack.mjs && node scripts/verify-hero-video.mjs && node scripts/verify-seo.mjs && node scripts/verify-qa.mjs && node scripts/verify-responsive.mjs"
+    "verify:fixes": "node scripts/verify-fixes.mjs",
+    "verify:devices": "node scripts/verify-devices.mjs",
+    "verify": "node scripts/verify-hero.mjs && node scripts/verify-cutout.mjs && node scripts/verify-scroll.mjs && node scripts/verify-overlap.mjs && node scripts/verify-hero-chapters.mjs && node scripts/verify-mobile-stack.mjs && node scripts/verify-hero-video.mjs && node scripts/verify-seo.mjs && node scripts/verify-qa.mjs && node scripts/verify-responsive.mjs && node scripts/verify-fixes.mjs && node scripts/verify-devices.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

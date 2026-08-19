@@ -32,23 +32,14 @@ export default function Experience() {
         let tl;
         let lastKey = "";
 
-        /** Hero pin spacer must exist — measuring before pin layout poisons start Y. */
-        const pinLayout = () => {
-          const spacers = [...document.querySelectorAll(".pin-spacer")];
-          if (spacers.length < 1) return null;
-          const pinEnd = Math.max(...spacers.map((s) => s.offsetTop + s.offsetHeight));
-          if (pinEnd < window.innerHeight * 2.2) return null;
-          return { spacers, pinEnd };
-        };
-
+        /** Measure career track in document space. No hero pin required. */
         const measure = () => {
-          const pins = pinLayout();
-          if (!pins || !track) return null;
+          if (!track) return null;
           const absTop = Math.round(track.getBoundingClientRect().top + window.scrollY);
-          // Reject pre-pin layout (classic 1800 vs real ~6840)
-          if (absTop < pins.pinEnd - 120) return null;
+          if (absTop < window.innerHeight * 0.85) return null;
+          if (track.offsetHeight < window.innerHeight * 1.4) return null;
           const absEnd = absTop + track.offsetHeight - window.innerHeight;
-          return { absTop, absEnd: Math.max(absTop + 100, absEnd), pinEnd: pins.pinEnd };
+          return { absTop, absEnd: Math.max(absTop + 100, absEnd) };
         };
 
         const mount = () => {

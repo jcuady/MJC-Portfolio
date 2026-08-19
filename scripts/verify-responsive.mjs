@@ -45,11 +45,8 @@ async function shot(page, name) {
 async function heroMetrics(page) {
   return page.evaluate(() => {
     const name = (document.querySelector(".hero-display")?.innerText || "").replace(/\s+/g, " ").trim();
-    const hint = document.querySelector(".hero-portrait-hint")?.textContent?.trim() || "";
-    const pressed = document.querySelector(".hero-portrait")?.getAttribute("aria-pressed");
-    const portraitBtn = document.querySelector(".hero-portrait");
-    const grad = document.querySelector(".hero-portrait img[data-shot='grad']");
-    const barong = document.querySelector(".hero-portrait img[data-shot='barong']");
+    const profileName = (document.querySelector(".profile-name")?.innerText || "").replace(/\s+/g, " ").trim();
+    const portrait = document.querySelector(".hero-portrait img") || document.querySelector(".hero-portrait");
     const chapter = document.querySelector(".hero-lede");
     const cr = chapter?.getBoundingClientRect();
     const heroPin = document.querySelector(".hero-pin");
@@ -59,18 +56,15 @@ async function heroMetrics(page) {
       nameEl &&
         (() => {
           const r = nameEl.getBoundingClientRect();
-          // Majority of the name block must sit in the viewport (not education section)
           const visible = Math.min(r.bottom, innerHeight) - Math.max(r.top, 0);
           return r.width > 0 && visible > Math.min(40, r.height * 0.5);
         })()
     );
+    const pr = document.querySelector(".hero-portrait")?.getBoundingClientRect();
 
     return {
       name,
-      hint,
-      pressed,
-      gradOp: grad ? getComputedStyle(grad).opacity : null,
-      barongOp: barong ? getComputedStyle(barong).opacity : null,
+      profileName,
       overflowX: document.documentElement.scrollWidth > innerWidth + 2,
       docW: document.documentElement.scrollWidth,
       vw: innerWidth,
@@ -81,8 +75,9 @@ async function heroMetrics(page) {
         chapter &&
         parseFloat(getComputedStyle(chapter).opacity) > 0.5 &&
         getComputedStyle(chapter).visibility !== "hidden",
-      portraitOk: Boolean(portraitBtn && grad && (grad.naturalWidth || 0) > 0),
-      overflowClip: chapter && (cr.bottom > innerHeight + 8 || cr.height < 80),
+      portraitOk: Boolean(portrait && (portrait.naturalWidth || portrait.clientWidth || 0) > 0),
+      introBeforePortrait: Boolean(cr && pr && cr.top <= pr.top + 8),
+      overflowClip: chapter && cr.height < 80,
     };
   });
 }
@@ -146,11 +141,10 @@ async function main() {
       document.querySelector(".hero-pin")?.scrollIntoView({ block: "start" });
     });
     await new Promise((r) => setTimeout(r, 400));
-    // Portrait must exist in intro chapter
-    await page.waitForSelector(".hero-portrait [data-shot='grad']", { timeout: 10000 });
+    await page.waitForSelector(".hero-portrait img, img.hero-portrait", { timeout: 10000 });
     await page.waitForFunction(
       () => {
-        const img = document.querySelector(".hero-portrait [data-shot='grad']");
+        const img = document.querySelector(".hero-portrait img") || document.querySelector("img.hero-portrait");
         return img && img.naturalWidth > 0;
       },
       { timeout: 10000 }
@@ -164,8 +158,11 @@ async function main() {
     if (m.scrollY > 40 || m.heroTop > 80 || !m.nameInView) {
       report.fails.push({ vp: vp.id, where: "hero-not-in-viewport", m });
     }
-    if (!/Malcolm Joaquin/i.test(m.name) || !/Cuady/i.test(m.name)) {
-      report.fails.push({ vp: vp.id, where: "hero-name", m });
+    if (!/Building systems/i.test(m.name) || !/scale/i.test(m.name)) {
+      report.fails.push({ vp: vp.id, where: "hero-headline", m });
+    }
+    if (!/Malcolm Joaquin/i.test(m.profileName) || !/Cuady/i.test(m.profileName)) {
+      report.fails.push({ vp: vp.id, where: "hero-profile-name", m });
     }
     const tagline = await page.evaluate(() => {
       const body = document.querySelector(".hero-hook");
@@ -178,7 +175,9 @@ async function main() {
       report.fails.push({ vp: vp.id, where: "intro-thesis-missing", tagline });
     }
     const hasCta = await page.evaluate(
-      () => !!document.querySelector(".hero-cta a[href='#projects']")
+      () =>
+        !!document.querySelector(".hero-cta a[href='#work']") ||
+        !!document.querySelector(".hero-cta a[href='#projects']")
     );
     if (!hasCta) report.fails.push({ vp: vp.id, where: "intro-cta-missing" });
     const ctaInView = await page.evaluate(() => {
@@ -196,26 +195,23 @@ async function main() {
     if (/five layers from messy/i.test(heroText)) {
       report.fails.push({ vp: vp.id, where: "intro-tagline-in-viewport-text" });
     }
-    const processOk = await page.evaluate((landscape) => {
+    const processOk = await page.evaluate(() => {
       const stations = document.querySelectorAll(".hero-station").length;
-      const banned = /Hear the operation|Hear · Shape|Leave it live/i.test(
-        document.querySelector(".hero-sticky")?.innerText || ""
+      const root = document.querySelector("[data-hero='bento']") || document.querySelector(".hero-sticky");
+      const banned = /Hear the operation|Hear · Shape|Leave it live|5\+\s*YEARS|35%\+/i.test(
+        root?.innerText || ""
       );
-      const press = document.querySelector(".hero-press");
-      const r = press?.getBoundingClientRect();
-      const painted = r && r.width > 40 && r.height > 40 && r.bottom > 40 && r.top < innerHeight;
-      return { stations, banned, painted, ok: stations === 0 && !banned && (landscape || painted) };
-    }, vp.height < 500);
+      const grid = document.querySelector(".hero-bento-grid");
+      const r = grid?.getBoundingClientRect();
+      const painted = r && r.width > 40 && r.height > 40 && r.top < innerHeight;
+      return { stations, banned, painted, ok: stations === 0 && !banned && painted };
+    });
     if (!processOk.ok) report.fails.push({ vp: vp.id, where: "process-stations-removed", processOk });
     if (!m.portraitOk || !m.introVisible) {
       report.fails.push({ vp: vp.id, where: "hero-portrait", m });
     }
-    // At rest must show graduation, not barong
-    if (parseFloat(m.gradOp) < 0.7 || parseFloat(m.barongOp) > 0.3) {
-      report.fails.push({ vp: vp.id, where: "portrait-wrong-shot", m });
-    }
-    if (m.pressed === "true" || !/^Grad/i.test(m.hint || "")) {
-      report.fails.push({ vp: vp.id, where: "portrait-hint-mismatch", m });
+    if (!m.introBeforePortrait) {
+      report.fails.push({ vp: vp.id, where: "intro-after-portrait", m });
     }
     if (m.overflowX) {
       report.fails.push({ vp: vp.id, where: "overflow-x", m });

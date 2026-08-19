@@ -1,140 +1,121 @@
 import { useRef } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { ArrowDown, FileDown } from "lucide-react";
-import { Button } from "./ui/button.jsx";
-import { profile } from "../data/profile.jsx";
-import HeroStage from "./HeroStage.jsx";
+import HeroIntro from "./portfolio/HeroIntro.jsx";
+import ProofStrip from "./portfolio/ProofStrip.jsx";
+import ProfileCard from "./portfolio/ProfileCard.jsx";
+import TransformationCard from "./portfolio/TransformationCard.jsx";
+import RecruiterCard from "./portfolio/RecruiterCard.jsx";
+import SelectedWorkCard from "./portfolio/SelectedWorkCard.jsx";
+import TechStackCard from "./portfolio/TechStackCard.jsx";
+import SystemCard from "./portfolio/SystemCard.jsx";
+import UiUxCard from "./portfolio/UiUxCard.jsx";
+import IndustryPlaceholderStrip from "./portfolio/IndustryPlaceholderStrip.jsx";
 
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+gsap.registerPlugin(useGSAP);
 
 export default function Hero() {
-  const pinRef = useRef(null);
+  const rootRef = useRef(null);
 
   useGSAP(
     () => {
-      const root = pinRef.current;
-      const draw = root.querySelector(".hero-toolpath__draw");
-      const core = root.querySelector(".hero-press__core");
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const mobile = window.matchMedia("(max-width: 767px)").matches;
-      const short = window.matchMedia("(max-height: 520px)").matches;
+      const root = rootRef.current;
+      if (!root) return;
+      root.dataset.motion = "static";
+      if (reduce) return;
 
-      const length = draw?.getTotalLength?.() ?? 0;
-      if (draw && length) {
-        gsap.set(draw, { strokeDasharray: length, strokeDashoffset: length });
-      }
+      const lines = root.querySelectorAll(".hero-display__line");
+      const hook = root.querySelector(".hero-hook");
+      const ctas = root.querySelectorAll(".hero-cta a");
+      const proof = root.querySelectorAll(".hero-proof li");
+      const cards = root.querySelectorAll(".bento-card");
+      const portrait = root.querySelector(".profile-card__shot img");
 
-      const apply = (p) => {
-        root.dataset.p = String(p);
-        root.style.setProperty("--hero-p", String(p));
-      };
-
-      apply(0);
-
-      gsap.from(".hero-lede > *", {
-        y: reduce ? 0 : 18,
-        autoAlpha: reduce ? 1 : 0,
-        stagger: 0.06,
-        duration: 0.55,
+      gsap.from(".hero-pill", {
+        y: 10,
+        autoAlpha: 0,
+        duration: 0.4,
         ease: "power3.out",
-        delay: 0.04,
-        clearProps: "transform",
       });
-
-      if (reduce || mobile || short) {
-        root.dataset.motion = "static";
-        if (draw) gsap.set(draw, { strokeDashoffset: 0 });
-        apply(0);
-        return;
-      }
-
-      root.dataset.motion = "pin";
-
-      const tl = gsap.timeline({
-        defaults: { ease: "none" },
-        scrollTrigger: {
-          id: "hero-press",
-          trigger: root,
-          start: "top top",
-          end: "+=220%",
-          pin: true,
-          pinSpacing: true,
-          pinType: "fixed",
-          scrub: 0.4,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-          refreshPriority: -30,
-          onUpdate: (self) => apply(self.progress),
-        },
+      gsap.from(lines, {
+        y: 14,
+        autoAlpha: 0,
+        stagger: 0.06,
+        duration: 0.5,
+        ease: "power3.out",
+        delay: 0.05,
       });
-
-      if (draw && length) {
-        tl.to(draw, { strokeDashoffset: 0, duration: 1 }, 0);
+      if (hook) {
+        gsap.from(hook, { y: 12, autoAlpha: 0, duration: 0.45, delay: 0.12, ease: "power3.out" });
       }
-      if (core) {
-        tl.fromTo(core, { y: 10 }, { y: -6, duration: 1 }, 0);
+      gsap.from(ctas, {
+        y: 10,
+        autoAlpha: 0,
+        stagger: 0.05,
+        duration: 0.4,
+        delay: 0.16,
+        ease: "power3.out",
+      });
+      gsap.from(proof, {
+        y: 10,
+        autoAlpha: 0,
+        stagger: 0.04,
+        duration: 0.4,
+        delay: 0.2,
+        ease: "power3.out",
+      });
+      gsap.from(cards, {
+        y: 12,
+        autoAlpha: 0,
+        stagger: 0.04,
+        duration: 0.45,
+        ease: "power3.out",
+        delay: 0.1,
+      });
+      if (portrait) {
+        gsap.from(portrait, {
+          scale: 0.97,
+          autoAlpha: 0,
+          duration: 0.6,
+          ease: "power3.out",
+        delay: 0.2,
+        });
       }
-
-      const refresh = () => ScrollTrigger.refresh();
-      window.addEventListener("load", refresh);
-      requestAnimationFrame(refresh);
-      return () => window.removeEventListener("load", refresh);
     },
-    { scope: pinRef }
+    { scope: rootRef }
   );
 
   return (
     <section
       id="top"
-      ref={pinRef}
-      className="hero-pin pin-frame relative z-[1]"
-      data-hero="press"
-      data-p="0"
-      data-motion="pin"
+      ref={rootRef}
+      className="hero-pin hero-bento-root"
+      data-hero="bento"
+      data-motion="static"
     >
-      <div className="hero-sticky pin-viewport">
-        <div className="grid-bg absolute inset-0" aria-hidden="true" />
-        <div className="hero-glow glow-mint" aria-hidden="true" />
-
-        <div className="hero-shell">
-          <div className="hero-lede">
-            <p className="eyebrow">Lead Full-Stack · Marikina, PH</p>
-            <h1 className="hero-display">
-              <span className="hero-display__line">Malcolm Joaquin</span>
-              <span className="hero-display__line hero-display__accent">L. Cuady</span>
-            </h1>
-            <p className="hero-hook">{profile.tagline}</p>
-            <div className="hero-cta">
-              <Button asChild size="lg" className="group pr-2">
-                <a href="#projects">
-                  See shipped work
-                  <span
-                    className="ml-1 inline-flex h-8 w-8 items-center justify-center rounded-full bg-black/10 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5 group-hover:-translate-y-px group-active:scale-95"
-                    aria-hidden="true"
-                  >
-                    <ArrowDown size={14} strokeWidth={1.5} />
-                  </span>
-                </a>
-              </Button>
-              <Button asChild size="lg" variant="outline" className="group">
-                <a href={profile.resumePath} download="Malcolm_Joaquin_Cuady_Resume.pdf">
-                  Resume
-                  <span
-                    className="ml-1 inline-flex h-8 w-8 items-center justify-center rounded-full bg-black/5 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5 group-hover:-translate-y-px"
-                    aria-hidden="true"
-                  >
-                    <FileDown size={14} strokeWidth={1.5} />
-                  </span>
-                </a>
-              </Button>
+      <div className="hero-sticky">
+        <div className="hero-bento-wrap">
+          <div className="hero-bento-grid">
+            <div className="hero-bento-left">
+              <HeroIntro />
+              <ProofStrip />
+            </div>
+            <ProfileCard />
+            <div className="hero-bento-right">
+              <TransformationCard />
+              <RecruiterCard />
+            </div>
+            <div className="hero-bento-bottom">
+              <SelectedWorkCard />
+              <div className="hero-bento-side">
+                <TechStackCard />
+                <SystemCard />
+                <UiUxCard />
+              </div>
             </div>
           </div>
-
-          <div className="hero-visual">
-            <HeroStage />
-          </div>
+          <IndustryPlaceholderStrip />
         </div>
       </div>
     </section>

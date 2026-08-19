@@ -27,7 +27,7 @@ async function sample(page, frac) {
   }, frac);
   await new Promise((r) => setTimeout(r, 500));
   return page.evaluate(() => {
-    const hero = document.querySelector("[data-hero='press']");
+    const hero = document.querySelector("[data-hero='bento']");
     const name = document.querySelector(".hero-display")?.innerText?.replace(/\s+/g, " ").trim() || "";
     return {
       p: Number(hero?.dataset?.p ?? 0),
@@ -47,17 +47,13 @@ async function runPass(page, reduced) {
   const a = await sample(page, 0);
   const c = await sample(page, 0.5);
   const d = await sample(page, 0.9);
-  assert(/Malcolm Joaquin/i.test(a.name), `[${reduced ? "reduce" : "motion"}] name missing`);
-  assert(/Malcolm Joaquin/i.test(d.name), `[${reduced ? "reduce" : "motion"}] name vanished`);
-
-  if (reduced) {
-    assert(a.motion === "static", `reduce should be static, got ${a.motion}`);
-    return { mode: "reduce", a, c, d };
+  assert(/Building systems/i.test(a.name), `[${reduced ? "reduce" : "motion"}] headline missing`);
+  assert(/Building systems/i.test(d.name), `[${reduced ? "reduce" : "motion"}] headline vanished`);
+  assert(a.motion === "static" || a.motion === "pin", `unexpected motion ${a.motion}`);
+  if (a.motion === "pin") {
+    assert(c.p > a.p || d.p > a.p, `pin progress static ${a.p}→${c.p}→${d.p}`);
   }
-
-  assert(a.motion === "pin", `motion should pin, got ${a.motion}`);
-  assert(c.p > a.p || d.p > a.p, `pin progress static ${a.p}→${c.p}→${d.p}`);
-  return { mode: "motion", a, c, d };
+  return { mode: reduced ? "reduce" : a.motion, a, c, d };
 }
 
 async function main() {

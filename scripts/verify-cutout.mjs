@@ -116,7 +116,7 @@ async function main() {
 
       if (!m.h1ClearNav) fails.push({ where: "h1-nav-cutout", id: run.id, p, ...m });
       if (m.overflowX) fails.push({ where: "overflow-x", id: run.id, p, ...m });
-      if (!/Malcolm/i.test(m.name || "")) fails.push({ where: "name-missing", id: run.id, p, ...m });
+      if (!/Building systems/i.test(m.name || "")) fails.push({ where: "headline-missing", id: run.id, p, ...m });
       if ((run.id === "mob" || run.id === "se") && m.touchMin < 40) {
         fails.push({ where: "touch-target", id: run.id, p, ...m });
       }

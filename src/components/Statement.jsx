@@ -14,9 +14,10 @@ export default function Statement() {
 
   return (
     <section
-      id="statement"
+      id="about"
       className="statement-pin pin-frame relative z-0 overflow-hidden bg-[var(--bg)]"
     >
+      <span id="statement" className="sr-only" />
       <div className="statement-sticky relative flex min-h-[100svh] flex-col justify-center py-16 sm:py-20">
         <div className="wrap flex w-full flex-col gap-6 sm:gap-8 lg:grid lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:gap-12">
           <h2 className="display-huge" aria-label="Doesn't just write code.">
@@ -78,7 +79,7 @@ export default function Statement() {
             <ArrowRight size={16} aria-hidden="true" />
           </Button>
           <Button asChild variant="outline" size="lg">
-            <a href="#projects">See shipped work</a>
+            <a href="#work">See shipped work</a>
           </Button>
           <p className="text-xs leading-relaxed text-soft sm:ml-2 sm:max-w-xs">
             Demo a live system or plan a transformation for the ops you want to scale.

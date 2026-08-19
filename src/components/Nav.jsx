@@ -1,22 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Download, Moon, Sun, Menu, X } from "lucide-react";
-import { FaGithub } from "react-icons/fa";
-import { Button } from "./ui/button.jsx";
+import { ArrowRight, Moon, Sun, X } from "lucide-react";
 import { useTheme } from "../lib/theme.jsx";
-import { profile } from "../data/profile.jsx";
+import BrandLogo from "./portfolio/BrandLogo.jsx";
 
 const links = [
-  { href: "#projects", label: "Work" },
+  { href: "#work", label: "Work" },
   { href: "#experience", label: "Experience" },
-  { href: "#skills", label: "Stack" },
+  { href: "#stack", label: "Stack" },
+  { href: "#about", label: "About" },
   { href: "#github", label: "GitHub" },
-  { href: "#faq", label: "FAQ" },
 ];
 
 export default function Nav() {
   const { theme, toggle } = useTheme();
   const [open, setOpen] = useState(false);
+  const sheetRef = useRef(null);
+  const menuBtnRef = useRef(null);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -25,67 +25,89 @@ export default function Nav() {
     };
   }, [open]);
 
+  useEffect(() => {
+    if (!open) return undefined;
+    const sheet = sheetRef.current;
+    const focusables = sheet
+      ? [...sheet.querySelectorAll("a, button")].filter((el) => !el.hasAttribute("disabled"))
+      : [];
+    focusables[0]?.focus();
+
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        menuBtnRef.current?.focus();
+        return;
+      }
+      if (e.key !== "Tab" || focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
+
   return (
     <motion.header
-      initial={{ y: -16, opacity: 0 }}
+      initial={{ y: -12, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed inset-x-0 top-0 z-50 border-b border-[color-mix(in_srgb,var(--deep)_35%,transparent)] bg-[color-mix(in_srgb,var(--bg)_92%,transparent)] backdrop-blur-xl"
+      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+      className="nav-bar"
     >
-      <nav className="wrap flex h-14 items-center justify-between" aria-label="Primary">
+      <nav className="nav-bar__inner" aria-label="Primary">
         <a
           href="#top"
-          className="flex items-center gap-3 transition-colors hover:opacity-80"
-          aria-label="Malcolm Cuady — home"
+          className="nav-bar__brand"
+          aria-label="MJC home"
           onClick={() => setOpen(false)}
         >
-          <span className="nav-wordmark">Malcolm Cuady</span>
+          <BrandLogo />
         </a>
 
-        <div className="hidden items-center gap-6 md:flex">
+        <div className="nav-bar__links">
           {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              className="font-mono text-xs uppercase tracking-[0.18em] text-soft transition-colors duration-200 hover:text-mist"
-            >
+            <a key={l.href} href={l.href}>
               {l.label}
             </a>
           ))}
         </div>
 
-        <div className="flex items-center gap-1.5 sm:gap-2">
+        <div className="nav-bar__actions">
           <button
             type="button"
             onClick={toggle}
             aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-            className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-soft transition-colors hover:bg-night hover:text-mist"
+            className="nav-icon-btn"
           >
-            {theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
+            {theme === "dark" ? <Sun size={20} strokeWidth={1.75} /> : <Moon size={20} strokeWidth={1.75} />}
           </button>
-          <a
-            href={profile.github}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="GitHub profile"
-            className="hidden h-11 w-11 items-center justify-center rounded-full text-soft transition-colors hover:text-mist sm:inline-flex"
-          >
-            <FaGithub size={18} />
+          <a href="#contact" className="hero-btn hero-btn--fill nav-bar__cta group">
+            Let's build together
+            <span className="hero-btn__icon" aria-hidden="true">
+              <ArrowRight size={13} strokeWidth={1.75} />
+            </span>
           </a>
-          <Button asChild size="sm" variant="outline" className="hidden sm:inline-flex">
-            <a href={profile.resumePath} download="Malcolm_Joaquin_Cuady_Resume.pdf">
-              <Download size={14} aria-hidden="true" />
-              Resume
-            </a>
-          </Button>
           <button
+            ref={menuBtnRef}
             type="button"
-            className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-mist md:hidden"
+            className="nav-icon-btn nav-bar__menu"
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
+            aria-controls="mobile-nav-sheet"
             onClick={() => setOpen((v) => !v)}
           >
-            {open ? <X size={20} /> : <Menu size={20} />}
+            {open ? (
+              <X size={20} strokeWidth={1.75} />
+            ) : (
+              <span className="nav-burger" aria-hidden="true"><span /><span /><span /></span>
+            )}
           </button>
         </div>
       </nav>
@@ -93,29 +115,31 @@ export default function Nav() {
       <AnimatePresence>
         {open ? (
           <motion.div
+            id="mobile-nav-sheet"
+            ref={sheetRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site menu"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="border-t border-deep/50 bg-obsidian md:hidden"
+            className="nav-sheet"
           >
-            <div className="wrap flex flex-col gap-1 py-4">
+            <div className="nav-sheet__inner">
               {links.map((l) => (
-                <a
-                  key={l.href}
-                  href={l.href}
-                  onClick={() => setOpen(false)}
-                  className="rounded-xl px-3 py-3 text-base text-soft transition-colors hover:bg-night hover:text-mist"
-                >
+                <a key={l.href} href={l.href} onClick={() => setOpen(false)}>
                   {l.label}
                 </a>
               ))}
               <a
-                href={profile.resumePath}
-                download="Malcolm_Joaquin_Cuady_Resume.pdf"
+                href="#contact"
+                className="hero-btn hero-btn--fill nav-sheet__cta"
                 onClick={() => setOpen(false)}
-                className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-spring px-4 py-3 text-sm font-medium text-obsidian"
               >
-                <Download size={14} /> Download resume
+                Let's build together
+                <span className="hero-btn__icon" aria-hidden="true">
+                  <ArrowRight size={13} strokeWidth={1.75} />
+                </span>
               </a>
             </div>
           </motion.div>

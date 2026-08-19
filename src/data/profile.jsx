@@ -37,6 +37,7 @@ export const profile = {
   phone: "+63 962 529 4043",
   github: "https://github.com/jcuady",
   githubUser: "jcuady",
+  linkedin: "https://www.linkedin.com/in/malcolm-joaquin-cuady-68053b401/",
   resumePath: "/resume.pdf",
 };
 
@@ -356,6 +357,21 @@ export const skillGroups = [
       { name: "Airtable", icon: SiAirtable, color: "#A3D3B4" },
       { name: "Zapier", icon: SiZapier, color: "#568F6F" },
       { name: "Figma", icon: SiFigma, color: "#C0E3C9" },
+      { name: "n8n", color: "#6DB58B" },
+      { name: "Make", color: "#87C4A0" },
+    ],
+  },
+  {
+    title: "Product & Delivery",
+    skills: [
+      { name: "Agile" },
+      { name: "Scrum" },
+      { name: "Sprint Planning" },
+      { name: "Backlog Prioritization" },
+      { name: "Code Reviews" },
+      { name: "Stakeholder Communication" },
+      { name: "Project Management" },
+      { name: "Technical Leadership" },
     ],
   },
 ];
@@ -363,7 +379,7 @@ export const skillGroups = [
 export const education = {
   school: "De La Salle University, Manila",
   degree: "BS Information Technology",
-  year: "2025",
+  year: "March 2026",
   logo: "/logos/dlsu.webp",
   gpa: "≈ 3.00",
   gpaPct: "≈ 90%",
@@ -384,12 +400,148 @@ export const education = {
 };
 
 export const certifications = [
+  {
+    name: "Google Project Management Professional Certificate",
+    org: "Google / Coursera",
+    year: "August 2026",
+  },
   { name: "AWS Academy Cloud Foundations", org: "Amazon Web Services", year: "2025" },
   { name: "Databricks Fundamentals & Generative AI", org: "Databricks", year: "2025" },
   { name: "CCNA: Enterprise Networking", org: "Cisco", year: "2025" },
-  { name: "Airtable Admin & Builder", org: "Airtable", year: "2024–2027" },
+  { name: "Airtable Admin & Builder", org: "Airtable", year: "2024-2027" },
   { name: "HubSpot Marketing & SEO", org: "HubSpot Academy", year: "2025" },
   { name: "Lean Six Sigma Yellow & White Belt", org: "Six Sigma Global Institute", year: "" },
+];
+
+export const heroSpecializations = [
+  "Project management",
+  "Agile delivery",
+  "Cloud foundations",
+  "Applied AI",
+  "Operations automation",
+];
+
+export const heroProof = [
+  {
+    id: "production",
+    title: "Production Systems",
+    body: "Web apps, operational platforms and internal tools",
+  },
+  {
+    id: "saas",
+    title: "SaaS & Automation",
+    body: "End-to-end workflows built around real operations",
+  },
+  {
+    id: "delivery",
+    title: "Product & Delivery",
+    body: "Engineering, project management and stakeholder coordination",
+  },
+];
+
+export const recruiterHighlights = [
+  "End-to-end product ownership",
+  "Full-stack engineering with business context",
+  "SaaS, automation, cloud & applied AI",
+  "Agile delivery & project management",
+  "Technical and stakeholder communication",
+];
+
+export const heroStack = [
+  {
+    title: "Frontend",
+    items: ["React", "Next.js", "TypeScript", "Tailwind"],
+  },
+  {
+    title: "Backend",
+    items: ["Node.js", "FastAPI", "ASP.NET Core"],
+  },
+  {
+    title: "Data & Cloud",
+    items: ["PostgreSQL", "Supabase", "AWS", "Docker"],
+  },
+  {
+    title: "Product & Delivery",
+    items: ["Agile", "Scrum", "Code Reviews"],
+  },
+  {
+    title: "Automation",
+    items: ["n8n", "Zapier", "Make", "Airtable"],
+  },
+];
+
+export const heroRoles = [
+  "Full-Stack Developer",
+  "UI/UX Developer",
+  "Automation Builder",
+  "Digital Transformation",
+  "Project Management",
+];
+
+export const transformationPillars = [
+  {
+    title: "Streamline",
+    body: "Replace fragmented workflows",
+  },
+  {
+    title: "Automate",
+    body: "Reduce repetitive operational work",
+  },
+  {
+    title: "Scale",
+    body: "Build systems that grow with the business",
+  },
+];
+
+export const uxFocus = [
+  "Wireframes & Prototypes",
+  "Design Systems",
+  "Usability",
+  "Responsive Design",
+];
+
+export const industries = [
+  { id: "saas", label: "SaaS Platforms", mark: "hex" },
+  { id: "logistics", label: "Logistics & Operations", mark: "bars" },
+  { id: "retail", label: "Retail", mark: "diamond" },
+  { id: "commerce", label: "E-commerce", mark: "ring" },
+  { id: "pro", label: "Professional Services", mark: "grid" },
+  { id: "growth", label: "Growth-stage Teams", mark: "slash" },
+];
+
+export const selectedWork = [
+  {
+    name: "Kadokohi Coffee",
+    category: "Commerce · POS · PWA",
+    desc: "Full-stack cafe platform combining online and QR ordering, POS workflows, payments, and customer notifications.",
+    stack: ["Next.js", "Supabase", "PayMongo"],
+    preview: "/previews/kadokohi.png",
+    url: "https://www.kadokohi.com/",
+  },
+  {
+    name: "Offgrid Lifestyle",
+    category: "E-commerce",
+    desc: "Full-stack merchandise storefront with online checkout, order workflows, automated status notifications, and responsive commerce UX.",
+    stack: ["Next.js", "Supabase", "PayMongo"],
+    preview: "/previews/offgrid.png",
+    url: "https://www.oglifestyleph.com/",
+  },
+  {
+    name: "MGC Architecture",
+    category: "Digital Transformation",
+    desc: "Architecture studio platform combining portfolio content, inquiry management, CMS workflows, and an interactive construction cost calculator.",
+    stack: ["Next.js", "TypeScript", "Supabase"],
+    preview: "/previews/mgc.png",
+    url: "https://www.mgcarchitecture.com/",
+  },
+  {
+    name: "Hakum Auto Care",
+    category: "Operations Platform",
+    desc: "Auto-care operations system combining live queue management, bookings, role-based access, branch operations, POS workflows, and customer notifications.",
+    stack: ["React", "Supabase", "Automation"],
+    preview: "/previews/hakum.png",
+    url: "https://www.hakumautocare.com/",
+  },
 ];
 
 export const faq = [
