@@ -2285,12 +2285,6 @@ html.dark .profile-card__avail span {
   color: color-mix(in srgb, var(--hb-sage-2) 78%, #fff);
 }
 
-/* Keep portrait under the availability plate */
-.profile-card__shot {
-  z-index: 1;
-}
-
-
 .transform-card {
   container-type: inline-size;
   container-name: transform;
