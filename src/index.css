@@ -2236,10 +2236,26 @@ html.dark .profile-roles li {
 
 .profile-card__avail {
   position: absolute;
-  left: 1.15rem;
-  bottom: 1.05rem;
-  z-index: 2;
-  max-width: 58%;
+  left: 1rem;
+  bottom: 0.9rem;
+  z-index: 3;
+  max-width: min(14.5rem, 62%);
+  padding: 0.55rem 0.75rem 0.6rem;
+  border-radius: 14px;
+  /* Opaque mint plate so copy never sits on the dark shirt */
+  background: color-mix(in srgb, #f7fbf8 92%, #eef6f0);
+  border: 1px solid rgba(15, 60, 45, 0.1);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.7) inset,
+    0 8px 24px rgba(6, 43, 33, 0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+html.dark .profile-card__avail {
+  background: color-mix(in srgb, #0b1c15 88%, #143528);
+  border-color: rgba(154, 195, 167, 0.18);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
 }
 
 .profile-card__avail p {
@@ -2250,14 +2266,30 @@ html.dark .profile-roles li {
   font-size: 0.82rem;
   font-weight: 650;
   color: var(--hb-forest-2);
+  line-height: 1.25;
+}
+
+html.dark .profile-card__avail p {
+  color: #e8f4ec;
 }
 
 .profile-card__avail span {
   display: block;
-  margin-top: 0.15rem;
-  font-size: 0.75rem;
+  margin-top: 0.2rem;
+  font-size: 0.72rem;
+  line-height: 1.35;
   color: var(--hb-muted);
 }
+
+html.dark .profile-card__avail span {
+  color: color-mix(in srgb, var(--hb-sage-2) 78%, #fff);
+}
+
+/* Keep portrait under the availability plate */
+.profile-card__shot {
+  z-index: 1;
+}
+
 
 .transform-card {
   container-type: inline-size;
