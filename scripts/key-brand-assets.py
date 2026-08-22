@@ -75,8 +75,15 @@ for src, dest, thresh in logo_jobs:
     if not src.exists():
         raise SystemExit(f"missing {src}")
     out = flood_alpha(Image.open(src), max_ch=thresh)
+    # ~3x CSS display (160x53) — sharp on retina, not multi-MB
+    target_w = 480
+    ratio = target_w / out.size[0]
+    out = out.resize(
+        (target_w, max(1, round(out.size[1] * ratio))),
+        Image.Resampling.LANCZOS,
+    )
     out.save(dest, "PNG", optimize=True)
-    print(f"{dest.name} {out.size} mode={out.mode}")
+    print(f"{dest.name} {out.size} mode={out.mode} {dest.stat().st_size}B")
 
 portrait_src = SRC / "MJC.png"
 if not portrait_src.exists():

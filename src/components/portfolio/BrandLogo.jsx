@@ -2,7 +2,10 @@ import { useTheme } from "../../lib/theme.jsx";
 
 export default function BrandLogo({ className = "", compact = false }) {
   const { theme } = useTheme();
-  const src = theme === "dark" ? "/brand/logo-dark.png" : "/brand/logo-light.png";
+  const src =
+    theme === "dark"
+      ? "/brand/logo-dark.png?v=5"
+      : "/brand/logo-light.png?v=5";
 
   return (
     <span className={`brand-logo ${compact ? "brand-logo--compact" : ""} ${className}`}>

@@ -2731,12 +2731,14 @@ html.dark .profile-roles li {
   display: inline-flex;
   align-items: center;
   height: 1.85rem;
+  background: transparent;
 }
 
 .brand-logo .nav-logo {
   display: block;
   height: 1.85rem;
   width: auto;
+  background: transparent;
 }
 
 .nav-bar__links {

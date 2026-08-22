@@ -1,6 +1,7 @@
 /**
  * Google Search Console + browser favicons.
- * Spec: square, crawlable, ≥48px (48/96). Also writes classic /favicon.ico.
+ * Spec: square, crawlable, >=48px (48/96). Also writes classic /favicon.ico.
+ * Renders the mint-plate mark from public/icon.svg — never a black tile.
  */
 import puppeteer from "puppeteer-core";
 import { existsSync, readFileSync, writeFileSync } from "fs";
@@ -18,13 +19,14 @@ const CHROME = [
   "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
 ].find((p) => p && existsSync(p));
 
+const PLATE = "#EEF6F0";
 const svg = readFileSync(join(ROOT, "public", "icon.svg"), "utf8");
 
 async function shot(page, size, out) {
   await page.setViewport({ width: size, height: size, deviceScaleFactor: 1 });
   const markup = svg.replace("<svg", `<svg width="${size}" height="${size}"`);
   await page.setContent(
-    `<!doctype html><html><body style="margin:0;background:#0D1C15">${markup}</body></html>`,
+    `<!doctype html><html><body style="margin:0;background:${PLATE}">${markup}</body></html>`,
     { waitUntil: "domcontentloaded", timeout: 10000 }
   );
   await page.screenshot({ path: out, omitBackground: false, type: "png" });
@@ -52,7 +54,6 @@ for (const [size, path] of Object.entries(outs)) {
 }
 await browser.close();
 
-// Ensure png-to-ico is available
 let pngToIco;
 try {
   pngToIco = (await import("png-to-ico")).default;
