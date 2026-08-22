@@ -2221,6 +2221,7 @@ html.dark .profile-roles li {
   height: 72%;
   max-width: 88%;
   pointer-events: none;
+  background: transparent;
 }
 
 .profile-card__shot img {
@@ -2230,6 +2231,7 @@ html.dark .profile-roles li {
   max-width: 100%;
   object-fit: contain;
   object-position: bottom right;
+  background: transparent;
 }
 
 .profile-card__avail {

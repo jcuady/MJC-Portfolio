@@ -28,7 +28,7 @@ export default function ProfileCard() {
       </div>
       <div className="hero-portrait profile-card__shot">
         <img
-          src="/brand/portrait.webp"
+          src="/brand/portrait.webp?v=4"
           alt="Portrait of Malcolm Joaquin Cuady"
           width={900}
           height={1125}
