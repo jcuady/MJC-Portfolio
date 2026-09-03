@@ -12,7 +12,6 @@ import {
   SiFirebase,
   SiPostgresql,
   SiFastapi,
-  SiKubernetes,
   SiGithubactions,
   SiFigma,
   SiDotnet,
@@ -30,7 +29,10 @@ import { FaMasksTheater } from "react-icons/fa6";
 export const profile = {
   name: "Malcolm Joaquin L. Cuady",
   short: "Malcolm Cuady",
-  role: "Lead Full-Stack Developer",
+  role: "Full-Stack Developer",
+  /** LinkedIn-style headline used across landing meta and hero identity. */
+  description:
+    "Full-Stack Developer | Business & Digital Transformation | Project Management | DLSU BS IT (March 2026)",
   tagline: "I turn manual operations into digital systems.",
   location: "Marikina City, Philippines",
   email: "jcuady@gmail.com",
@@ -114,7 +116,7 @@ export const projects = [
     featured: true,
   },
   {
-    name: "NexBusinessBrain",
+    name: "SaaS RAG / Conversational AI",
     kind: "Enterprise RAG AI System",
     url: null,
     preview: null,
@@ -126,43 +128,43 @@ export const projects = [
     featured: false,
   },
   {
-    name: "NexLogistics & Sklogistics",
-    kind: "Multi-Tenant Logistics SaaS",
+    name: "Multi-Tenant Logistics Platform",
+    kind: "Logistics SaaS",
     url: null,
     preview: null,
     index: "06",
     status: "NDA",
     unique: false,
-    desc: "End-to-end multi-tenant logistics management with client-specific tenancy isolation — Next.js, TypeScript, Supabase, and AWS.",
+    desc: "End-to-end multi-tenant logistics management with client-specific tenancy isolation - Next.js, TypeScript, Supabase, and AWS.",
     stack: ["Next.js", "TypeScript", "Supabase", "AWS"],
     featured: false,
   },
   {
-    name: "NexHRIS / SorenHRIS / PremiumOutlets",
+    name: "HR Platform Suite",
     kind: "HR & Retail SaaS Suite",
     url: null,
     preview: null,
     index: "07",
     status: "NDA · Sold",
     unique: false,
-    desc: "HR information and retail management SaaS built from scratch. SorenHRIS was commercially sold to an enterprise client as a production product.",
+    desc: "HR information and retail management SaaS built from scratch. One HR platform in the suite was sold to an enterprise client as a production product.",
     stack: ["Next.js", "TypeScript", "Supabase", "Docker"],
     featured: false,
   },
   {
-    name: "NexTask",
+    name: "Task Management Platform",
     kind: "Real-Time Project & Task Platform",
     url: null,
     preview: null,
     index: "08",
     status: "NDA",
     unique: false,
-    desc: "Collaborative task and project management for cross-team operations — Next.js, TypeScript, Supabase with real-time data sync.",
+    desc: "Collaborative task and project management for cross-team operations - Next.js, TypeScript, Supabase with real-time data sync.",
     stack: ["Next.js", "TypeScript", "Supabase"],
     featured: false,
   },
   {
-    name: "Bazaar",
+    name: "Marketplace Product",
     kind: "E-Commerce · Product QA Marketplace",
     url: null,
     preview: null,
@@ -174,14 +176,14 @@ export const projects = [
     featured: false,
   },
   {
-    name: "Beauty Connect",
+    name: "Salon Booking Marketplace",
     kind: "Salon & Clinic Booking Marketplace",
     url: null,
     preview: null,
     index: "10",
     status: "NDA",
     unique: false,
-    desc: "Multi-vendor platform for salons, barbershops, and aesthetic clinics — appointments plus product sales in one marketplace.",
+    desc: "Multi-vendor platform for salons, barbershops, and aesthetic clinics - appointments plus product sales in one marketplace.",
     stack: ["Next.js", "Supabase", "TypeScript"],
     featured: false,
   },
@@ -222,8 +224,8 @@ export const experience = [
     period: "11/2025 — 06/2026",
     points: [
       "Directed infrastructure modernization to Next.js, TypeScript, Supabase, Docker, and Coolify across all platforms",
-      "Designed NexBusinessBrain, an enterprise RAG AI system deployed company-wide",
-      "Led delivery of 8+ multi-tenant SaaS platforms; led Agile transformation and mentored 30+ interns",
+      "Designed a SaaS RAG / conversational AI system deployed company-wide under NDA",
+      "Led delivery of 8+ multi-tenant SaaS platforms; built internal Jira-style PM tooling; mentored 30+ interns",
     ],
   },
   {
@@ -344,15 +346,27 @@ export const skillGroups = [
       { name: "MySQL", icon: SiMysql, color: "#A3D3B4" },
       { name: "Firebase", icon: SiFirebase, color: "#C0E3C9" },
       { name: "AWS", icon: FaAws, color: "#6DB58B" },
+      { name: "Azure", color: "#6DB58B" },
       { name: "Docker", icon: SiDocker, color: "#87C4A0" },
-      { name: "Kubernetes", icon: SiKubernetes, color: "#568F6F" },
       { name: "Vercel", icon: SiVercel, color: "#DDF2DE" },
+    ],
+  },
+  {
+    title: "DevOps & Security",
+    skills: [
+      { name: "GitHub Actions", icon: SiGithubactions, color: "#87C4A0" },
+      { name: "CI/CD Pipelines", color: "#6DB58B" },
+      { name: "IaC Fundamentals", color: "#A3D3B4" },
+      { name: "Observability", color: "#87C4A0" },
+      { name: "Secure SDLC", color: "#6DB58B" },
+      { name: "IAM Basics", color: "#A3D3B4" },
+      { name: "Risk Management", color: "#568F6F" },
+      { name: "Network Security", color: "#C0E3C9" },
     ],
   },
   {
     title: "Automation & Quality",
     skills: [
-      { name: "GitHub Actions", icon: SiGithubactions, color: "#87C4A0" },
       { name: "Playwright", icon: FaMasksTheater, color: "#6DB58B" },
       { name: "Airtable", icon: SiAirtable, color: "#A3D3B4" },
       { name: "Zapier", icon: SiZapier, color: "#568F6F" },
@@ -372,6 +386,7 @@ export const skillGroups = [
       { name: "Stakeholder Communication" },
       { name: "Project Management" },
       { name: "Technical Leadership" },
+      { name: "Lean Six Sigma" },
     ],
   },
 ];
@@ -401,24 +416,93 @@ export const education = {
 
 export const certifications = [
   {
+    name: "Microsoft AI and ML Engineering Professional Certificate",
+    org: "Microsoft",
+    year: "August 2026",
+    credentialId: null,
+    pdf: "/certs/ai and ml.pdf",
+  },
+  {
+    name: "Microsoft Full-Stack Developer Professional Certificate",
+    org: "Microsoft",
+    year: "August 2026",
+    pdf: "/certs/fullstack.pdf",
+  },
+  {
+    name: "Microsoft Business Analyst Professional Certificate",
+    org: "Microsoft",
+    year: "August 2026",
+    pdf: "/certs/business analyst.pdf",
+  },
+  {
+    name: "Microsoft DevOps Engineering",
+    org: "Microsoft",
+    year: "August 2026",
+    credentialId: "69HLC3JFSOTB",
+    pdf: "/certs/devops.pdf",
+  },
+  {
+    name: "Microsoft Azure Administrator (AZ-104)",
+    org: "Packt",
+    year: "August 2026",
+    pdf: "/certs/az-104.pdf",
+  },
+  {
+    name: "Google AI Professional Certificate",
+    org: "Google",
+    year: "August 2026",
+    pdf: "/certs/google ai.pdf",
+  },
+  {
     name: "Google Project Management Professional Certificate",
     org: "Google / Coursera",
     year: "August 2026",
+    pdf: "/certs/project management.pdf",
   },
-  { name: "AWS Academy Cloud Foundations", org: "Amazon Web Services", year: "2025" },
+  {
+    name: "Certified Information Systems Security Professional (CISSP) Specialization",
+    org: "Infosec",
+    year: "September 2026",
+    credentialId: "ZJNZR0WGXU9K",
+    pdf: "/certs/CISSP.pdf",
+  },
+  {
+    name: "AWS Academy Cloud Foundations",
+    org: "Amazon Web Services",
+    year: "2025",
+    pdf: "/certs/AWS_Academy_Graduate___Cloud_Foundations___Training_Badge_Badge20260901-19-mcwaox.pdf",
+  },
   { name: "Databricks Fundamentals & Generative AI", org: "Databricks", year: "2025" },
-  { name: "CCNA: Enterprise Networking", org: "Cisco", year: "2025" },
   { name: "Airtable Admin & Builder", org: "Airtable", year: "2024-2027" },
   { name: "HubSpot Marketing & SEO", org: "HubSpot Academy", year: "2025" },
-  { name: "Lean Six Sigma Yellow & White Belt", org: "Six Sigma Global Institute", year: "" },
+  {
+    name: "CCNA: Enterprise Networking, Security, and Automation",
+    org: "Cisco Networking Academy",
+    year: "December 2023",
+    pdf: "/certs/CCNA_ENSA.pdf",
+  },
+  {
+    name: "Lean Six Sigma Yellow Belt and White Belt",
+    org: "Six Sigma Global Institute",
+    year: "December 2025",
+    credentialId: "1137662",
+    pdf: "/certs/SixSigmaYellowBelt-MalcolmCuady-1137662.pdf",
+  },
+  { name: "Klaviyo Developer Certificate", org: "Klaviyo", year: "" },
+  {
+    name: "Asana Workflow Specialist",
+    org: "Asana",
+    year: "",
+    pdf: "/certs/asana.pdf",
+  },
 ];
 
 export const heroSpecializations = [
+  "Full-stack engineering",
+  "Digital transformation",
   "Project management",
+  "Applied AI & ML",
   "Agile delivery",
-  "Cloud foundations",
-  "Applied AI",
-  "Operations automation",
 ];
 
 export const heroProof = [
@@ -472,10 +556,10 @@ export const heroStack = [
 
 export const heroRoles = [
   "Full-Stack Developer",
-  "UI/UX Developer",
-  "Automation Builder",
-  "Digital Transformation",
+  "Business & Digital Transformation",
   "Project Management",
+  "Applied AI",
+  "DLSU BS IT · March 2026",
 ];
 
 export const transformationPillars = [
@@ -555,6 +639,6 @@ export const faq = [
   },
   {
     q: "Can you share private / NDA work?",
-    a: "NexBusinessBrain and the Nex SaaS suite are under NDA. I can walk through architecture, scope, and outcomes in an interview without confidential code or client data.",
+    a: "The SaaS RAG / conversational AI system and the multi-tenant product suite are under NDA. I can walk through architecture, scope, and outcomes in an interview without confidential code, product names, or client data.",
   },
 ];

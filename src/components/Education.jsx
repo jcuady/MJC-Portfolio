@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Award } from "lucide-react";
+import { Award, ExternalLink } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card.jsx";
 import { Separator } from "./ui/separator.jsx";
 import { education, certifications } from "../data/profile.jsx";
@@ -89,7 +89,12 @@ export default function Education() {
                   <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-spring/30 bg-spring/10 text-spring">
                     <Award size={18} aria-hidden="true" />
                   </span>
-                  <CardTitle>Certifications</CardTitle>
+                  <div>
+                    <CardTitle>Certifications</CardTitle>
+                    <p className="mt-0.5 text-xs text-forest">
+                      {certifications.length} credentials · PDFs open where available
+                    </p>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="pt-0">
@@ -98,9 +103,28 @@ export default function Education() {
                     <li key={c.name}>
                       {i > 0 ? <Separator className="my-0" /> : null}
                       <div className="flex items-baseline justify-between gap-3 py-3">
-                        <div>
-                          <p className="text-sm text-mist">{c.name}</p>
-                          <p className="text-xs text-forest">{c.org}</p>
+                        <div className="min-w-0">
+                          {c.pdf ? (
+                            <a
+                              href={c.pdf}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="group inline-flex items-start gap-1.5 text-sm text-mist hover:text-spring"
+                            >
+                              <span>{c.name}</span>
+                              <ExternalLink
+                                size={12}
+                                className="mt-1 shrink-0 opacity-60 group-hover:opacity-100"
+                                aria-hidden="true"
+                              />
+                            </a>
+                          ) : (
+                            <p className="text-sm text-mist">{c.name}</p>
+                          )}
+                          <p className="text-xs text-forest">
+                            {c.org}
+                            {c.credentialId ? ` · ID ${c.credentialId}` : ""}
+                          </p>
                         </div>
                         <span className="shrink-0 font-mono text-xs text-forest">
                           {c.year}

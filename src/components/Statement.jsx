@@ -30,11 +30,12 @@ export default function Statement() {
 
           <div className="st-copy">
             <p className="text-base leading-[1.75] text-soft sm:text-lg">
-              Cafes taking orders on paper. Auto shops tracking queues on a
-              whiteboard. Studios costing projects by hand. Malcolm analyzes the
-              workflow, designs a custom system, ships the full stack, hardens it,
-              and stays to maintain it — then helps the next business scale the same
-              way.
+              Full-Stack Developer | Business &amp; Digital Transformation |
+              Project Management | DLSU BS IT (March 2026). Cafes taking orders
+              on paper. Auto shops tracking queues on a whiteboard. Studios
+              costing projects by hand. Malcolm analyzes the workflow, designs a
+              custom system, ships the full stack, hardens it, and stays to
+              maintain it — then helps the next business scale the same way.
             </p>
           </div>
         </div>

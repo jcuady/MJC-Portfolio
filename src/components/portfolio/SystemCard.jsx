@@ -2,14 +2,16 @@ import { ArrowRight, Award } from "lucide-react";
 import { certifications, heroSpecializations, profile } from "../../data/profile.jsx";
 
 export default function SystemCard() {
-  const [featured, ...rest] = certifications;
+  // Hero card shows top Microsoft/Google certs; full list lives in #education.
+  const preview = certifications.slice(0, 5);
+  const [featured, ...rest] = preview;
 
   return (
     <article className="bento-card system-card">
       <div className="work-card__head">
         <h2>Certifications</h2>
         <a href="#education">
-          All
+          All {certifications.length}
           <ArrowRight size={14} strokeWidth={1.75} aria-hidden="true" />
         </a>
       </div>
