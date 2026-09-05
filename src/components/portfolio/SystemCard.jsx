@@ -1,10 +1,14 @@
 import { ArrowRight, Award } from "lucide-react";
 import { certifications, heroSpecializations, profile } from "../../data/profile.jsx";
+import CertTrigger from "../CertTrigger.jsx";
+
+/** Prefer full-stack as the featured credential for engineering positioning. */
+const FEATURED_NAME = "Microsoft Full-Stack Developer Professional Certificate";
 
 export default function SystemCard() {
-  // Hero card shows a short preview; full ledger lives in #certifications.
-  const preview = certifications.slice(0, 5);
-  const [featured, ...rest] = preview;
+  const featured =
+    certifications.find((c) => c.name === FEATURED_NAME) ?? certifications[0];
+  const rest = certifications.filter((c) => c.name !== featured.name);
 
   return (
     <article className="bento-card system-card">
@@ -16,22 +20,26 @@ export default function SystemCard() {
         </a>
       </div>
 
-      <div className="system-card__featured">
-        <Award size={16} strokeWidth={1.6} aria-hidden="true" />
-        <div>
-          <strong>{featured.name}</strong>
-          <span>
-            {featured.org}
-            {featured.year ? `, ${featured.year}` : ""}
+      <CertTrigger cert={featured} variant="featured">
+        <span className="system-card__featured">
+          <Award size={16} strokeWidth={1.6} aria-hidden="true" />
+          <span className="system-card__featured-copy">
+            <strong>{featured.name}</strong>
+            <span>
+              {featured.org}
+              {featured.year ? `, ${featured.year}` : ""}
+            </span>
           </span>
-        </div>
-      </div>
+        </span>
+      </CertTrigger>
 
-      <ul className="system-card__list">
+      <ul className="system-card__list" aria-label={`${certifications.length} certifications`}>
         {rest.map((c) => (
           <li key={c.name}>
-            <span>{c.name}</span>
-            {c.year ? <em>{c.year}</em> : null}
+            <CertTrigger cert={c} variant="compact">
+              <span className="cert-trigger__label">{c.name}</span>
+              {c.year ? <em>{c.year}</em> : <em>n/a</em>}
+            </CertTrigger>
           </li>
         ))}
       </ul>

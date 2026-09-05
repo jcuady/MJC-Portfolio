@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Award, ExternalLink, FileText } from "lucide-react";
-import { certifications, certificationGroups } from "../data/profile.jsx";
+import { certifications, certificationGroups, profile } from "../data/profile.jsx";
+import CertTrigger from "./CertTrigger.jsx";
 
 export default function Certifications() {
   const grouped = certificationGroups.map((g) => ({
@@ -23,7 +24,8 @@ export default function Certifications() {
             </p>
           </div>
           <p className="certs-section__lede">
-            Full credential set across engineering, AI, cloud, security, and delivery. Open a PDF where available.
+            Full set of {certifications.length} credentials. Hover a row for a certificate peek; click to open
+            the full modal viewer.
           </p>
         </div>
 
@@ -42,31 +44,30 @@ export default function Certifications() {
                 {group.items.map((c) => (
                   <li key={c.name} className="certs-item">
                     <div className="certs-item__main">
-                      {c.pdf ? (
-                        <a
-                          href={c.pdf}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="certs-item__name"
-                        >
-                          <FileText size={15} strokeWidth={1.75} aria-hidden="true" />
+                      <CertTrigger cert={c} variant="ledger">
+                        <span className="certs-item__name">
+                          {c.pdf ? (
+                            <FileText size={15} strokeWidth={1.75} aria-hidden="true" />
+                          ) : (
+                            <Award size={15} strokeWidth={1.75} aria-hidden="true" />
+                          )}
                           <span>{c.name}</span>
-                          <ExternalLink size={12} className="certs-item__ext" aria-hidden="true" />
-                        </a>
-                      ) : (
-                        <p className="certs-item__name certs-item__name--plain">
-                          <Award size={15} strokeWidth={1.75} aria-hidden="true" />
-                          <span>{c.name}</span>
-                        </p>
-                      )}
+                        </span>
+                      </CertTrigger>
                       <p className="certs-item__meta">
                         {c.org}
                         {c.credentialId ? ` · ID ${c.credentialId}` : ""}
                         {c.verify ? (
                           <>
                             {" · "}
-                            <a href={c.verify} target="_blank" rel="noopener noreferrer">
+                            <a
+                              href={c.verify}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                            >
                               Verify
+                              <ExternalLink size={11} strokeWidth={1.75} aria-hidden="true" />
                             </a>
                           </>
                         ) : null}
@@ -86,6 +87,14 @@ export default function Certifications() {
             </motion.div>
           ))}
         </div>
+
+        <p className="certs-section__foot">
+          Prefer LinkedIn proofs?{" "}
+          <a href={profile.linkedin} target="_blank" rel="noopener noreferrer">
+            View on LinkedIn
+            <ExternalLink size={12} strokeWidth={1.75} aria-hidden="true" />
+          </a>
+        </p>
       </div>
     </section>
   );

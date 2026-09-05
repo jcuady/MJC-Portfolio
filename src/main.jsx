@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import { ThemeProvider } from "./lib/theme.jsx";
+import { CertViewerProvider } from "./lib/certViewer.jsx";
 import "./index.css";
 
 // Prevent flash of wrong theme before React hydrates styles (light is default)
@@ -20,7 +21,9 @@ if (import.meta.env.DEV && "serviceWorker" in navigator) {
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ThemeProvider>
-      <App />
+      <CertViewerProvider>
+        <App />
+      </CertViewerProvider>
     </ThemeProvider>
   </React.StrictMode>
 );
