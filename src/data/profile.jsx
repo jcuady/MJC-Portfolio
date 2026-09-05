@@ -421,18 +421,21 @@ export const certifications = [
     year: "August 2026",
     credentialId: null,
     pdf: "/certs/ai and ml.pdf",
+    group: "engineering",
   },
   {
     name: "Microsoft Full-Stack Developer Professional Certificate",
     org: "Microsoft",
     year: "August 2026",
     pdf: "/certs/fullstack.pdf",
+    group: "engineering",
   },
   {
     name: "Microsoft Business Analyst Professional Certificate",
     org: "Microsoft",
     year: "August 2026",
     pdf: "/certs/business analyst.pdf",
+    group: "engineering",
   },
   {
     name: "Microsoft DevOps Engineering",
@@ -440,24 +443,28 @@ export const certifications = [
     year: "August 2026",
     credentialId: "69HLC3JFSOTB",
     pdf: "/certs/devops.pdf",
+    group: "cloud",
   },
   {
     name: "Microsoft Azure Administrator (AZ-104)",
     org: "Packt",
     year: "August 2026",
     pdf: "/certs/az-104.pdf",
+    group: "cloud",
   },
   {
     name: "Google AI Professional Certificate",
     org: "Google",
     year: "August 2026",
     pdf: "/certs/google ai.pdf",
+    group: "engineering",
   },
   {
     name: "Google Project Management Professional Certificate",
     org: "Google / Coursera",
     year: "August 2026",
     pdf: "/certs/project management.pdf",
+    group: "engineering",
   },
   {
     name: "Certified Information Systems Security Professional (CISSP) Specialization",
@@ -465,21 +472,36 @@ export const certifications = [
     year: "September 2026",
     credentialId: "ZJNZR0WGXU9K",
     pdf: "/certs/CISSP.pdf",
+    note: "Infosec specialization / exam-prep path - not an ISC2 CISSP exam pass",
+    group: "security",
   },
   {
     name: "AWS Academy Cloud Foundations",
     org: "Amazon Web Services",
     year: "2025",
     pdf: "/certs/AWS_Academy_Graduate___Cloud_Foundations___Training_Badge_Badge20260901-19-mcwaox.pdf",
+    group: "cloud",
   },
-  { name: "Databricks Fundamentals & Generative AI", org: "Databricks", year: "2025" },
-  { name: "Airtable Admin & Builder", org: "Airtable", year: "2024-2027" },
-  { name: "HubSpot Marketing & SEO", org: "HubSpot Academy", year: "2025" },
+  {
+    name: "AWS Cloud Solutions Architect Professional Certificate",
+    org: "Amazon Web Services / Coursera",
+    year: "September 2026",
+    credentialId: "C62X74XPOGP7",
+    pdf: "/certs/aws_cloud_solutions_architect.pdf",
+    verify: "https://coursera.org/verify/professional-cert/C62X74XPOGP7",
+    note: "Coursera Professional Certificate pathway toward AWS Certified Solutions Architect - Associate exam prep (not the AWS exam credential itself)",
+    group: "cloud",
+  },
+  { name: "Databricks Fundamentals and Generative AI", org: "Databricks", year: "2025", group: "cloud" },
+  { name: "Airtable Admin and Builder", org: "Airtable", year: "2024-2027", group: "ops" },
+  { name: "HubSpot Marketing and SEO", org: "HubSpot Academy", year: "2025", group: "ops" },
   {
     name: "CCNA: Enterprise Networking, Security, and Automation",
     org: "Cisco Networking Academy",
     year: "December 2023",
     pdf: "/certs/CCNA_ENSA.pdf",
+    note: "Networking Academy course completion - not the Cisco CCNA certification exam",
+    group: "security",
   },
   {
     name: "Lean Six Sigma Yellow Belt and White Belt",
@@ -487,14 +509,24 @@ export const certifications = [
     year: "December 2025",
     credentialId: "1137662",
     pdf: "/certs/SixSigmaYellowBelt-MalcolmCuady-1137662.pdf",
+    group: "ops",
   },
-  { name: "Klaviyo Developer Certificate", org: "Klaviyo", year: "" },
+  { name: "Klaviyo Developer Certificate", org: "Klaviyo", year: "", group: "ops" },
   {
     name: "Asana Workflow Specialist",
     org: "Asana",
     year: "",
     pdf: "/certs/asana.pdf",
+    group: "ops",
   },
+];
+
+/** Display groups for the Certifications section */
+export const certificationGroups = [
+  { id: "engineering", label: "Engineering and AI" },
+  { id: "cloud", label: "Cloud and DevOps" },
+  { id: "security", label: "Security and Networking" },
+  { id: "ops", label: "Product, Marketing, and Ops" },
 ];
 
 export const heroSpecializations = [

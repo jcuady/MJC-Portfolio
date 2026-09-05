@@ -6,6 +6,7 @@ import Experience from "./components/Experience.jsx";
 import Skills from "./components/Skills.jsx";
 import GitHubSection from "./components/GitHubSection.jsx";
 import Education from "./components/Education.jsx";
+import Certifications from "./components/Certifications.jsx";
 import FAQ from "./components/FAQ.jsx";
 import Footer from "./components/Footer.jsx";
 import { useScrollRefresh } from "./lib/scroll.js";
@@ -23,6 +24,7 @@ export default function App() {
         <Projects />
         <Skills />
         <GitHubSection />
+        <Certifications />
         <Education />
         <FAQ />
       </main>

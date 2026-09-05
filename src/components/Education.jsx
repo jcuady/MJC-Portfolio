@@ -1,17 +1,18 @@
 import { motion } from "framer-motion";
-import { Award, ExternalLink } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card.jsx";
-import { Separator } from "./ui/separator.jsx";
 import { education, certifications } from "../data/profile.jsx";
 
 export default function Education() {
   return (
-    <section id="education" className="section-pad relative">
+    <section id="education" className="section-pad relative" aria-labelledby="education-heading">
       <div className="wrap">
-        <p className="eyebrow">Credentials</p>
-        <h2 className="section-title mt-3">Education & certifications</h2>
+        <p className="eyebrow">School</p>
+        <h2 id="education-heading" className="section-title mt-3">
+          Education
+        </h2>
 
-        <div className="mt-12 grid gap-4 lg:grid-cols-[1fr_1.15fr]">
+        <div className="mt-12 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -62,6 +63,15 @@ export default function Education() {
 
                 <div>
                   <p className="mb-2 font-mono text-xs uppercase tracking-[0.16em] text-forest">
+                    Academic foundations (4 years)
+                  </p>
+                  <p className="text-sm text-soft">
+                    C# / ASP.NET Core, PHP / Laravel, and Python as core coursework through the BS IT program.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="mb-2 font-mono text-xs uppercase tracking-[0.16em] text-forest">
                     Electives
                   </p>
                   <ul className="space-y-2.5">
@@ -83,56 +93,18 @@ export default function Education() {
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.55, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
           >
-            <Card className="h-full">
+            <Card className="h-full edu-certs-teaser">
               <CardHeader>
-                <div className="flex items-center gap-3">
-                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-spring/30 bg-spring/10 text-spring">
-                    <Award size={18} aria-hidden="true" />
-                  </span>
-                  <div>
-                    <CardTitle>Certifications</CardTitle>
-                    <p className="mt-0.5 text-xs text-forest">
-                      {certifications.length} credentials · PDFs open where available
-                    </p>
-                  </div>
-                </div>
+                <CardTitle>Credentials</CardTitle>
+                <p className="mt-1 text-sm text-soft">
+                  {certifications.length} certifications across engineering, AI, cloud, security, and delivery.
+                </p>
               </CardHeader>
-              <CardContent className="pt-0">
-                <ul>
-                  {certifications.map((c, i) => (
-                    <li key={c.name}>
-                      {i > 0 ? <Separator className="my-0" /> : null}
-                      <div className="flex items-baseline justify-between gap-3 py-3">
-                        <div className="min-w-0">
-                          {c.pdf ? (
-                            <a
-                              href={c.pdf}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="group inline-flex items-start gap-1.5 text-sm text-mist hover:text-spring"
-                            >
-                              <span>{c.name}</span>
-                              <ExternalLink
-                                size={12}
-                                className="mt-1 shrink-0 opacity-60 group-hover:opacity-100"
-                                aria-hidden="true"
-                              />
-                            </a>
-                          ) : (
-                            <p className="text-sm text-mist">{c.name}</p>
-                          )}
-                          <p className="text-xs text-forest">
-                            {c.org}
-                            {c.credentialId ? ` · ID ${c.credentialId}` : ""}
-                          </p>
-                        </div>
-                        <span className="shrink-0 font-mono text-xs text-forest">
-                          {c.year}
-                        </span>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+              <CardContent>
+                <a href="#certifications" className="edu-certs-teaser__link">
+                  View full certifications
+                  <ArrowRight size={14} strokeWidth={1.75} aria-hidden="true" />
+                </a>
               </CardContent>
             </Card>
           </motion.div>
