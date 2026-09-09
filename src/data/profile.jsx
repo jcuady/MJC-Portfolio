@@ -522,6 +522,38 @@ export const experience = [
     ],
   },
   {
+    role: "Software Developer (Project)",
+    org: "Employee Management System",
+    period: "2025",
+    yearLabel: "2025",
+    roleType: "Project · Full-stack",
+    industry: "HR · Internal tools",
+    teamSize: "Solo / project team",
+    summary:
+      "Built an employee management system with React UI, ASP.NET Core REST APIs, PostgreSQL, and role-based access — documented CRUD and deployed.",
+    points: [
+      "React + C# / ASP.NET Core REST APIs + PostgreSQL + RBAC; documented CRUD; deployed",
+      "Ship proof for academic C# / ASP.NET Core foundations applied to a full employee ops stack",
+    ],
+    tech: ["React", "ASP.NET Core", "PostgreSQL", "REST", "RBAC"],
+    preview: null,
+    snapshotTitle: "Employee Management System",
+    snapshotDesc: ".NET APIs, React UI, and RBAC for employee workflows.",
+    impact: [
+      { label: ".NET delivery", detail: "ASP.NET Core APIs powering documented CRUD flows" },
+      { label: "Access control", detail: "RBAC across employee management screens" },
+      { label: "Deployed stack", detail: "React + PostgreSQL service path in production hosting" },
+    ],
+    capabilities: [
+      "ASP.NET Core",
+      "React",
+      "PostgreSQL",
+      "REST APIs",
+      "RBAC",
+      "Documentation",
+    ],
+  },
+  {
     role: "Project Lead / Full-Stack Developer — DLSU Capstone",
     org: "Rent Then Drive",
     period: "2024 — 2025",
@@ -546,8 +578,7 @@ export const experience = [
     ],
     capabilities: [
       "Project leadership",
-      "Payments",
-      "OCR",
+      "Payments",      "OCR",
       "Firebase",
       "Analytics",
       "Team delivery",

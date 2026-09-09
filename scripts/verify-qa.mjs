@@ -1,6 +1,6 @@
 /**
  * Full-experience QA seam (TDD):
- * 1) Experience must open at Step 01 — not stuck at 10/10 (poisoned ST start)
+ * 1) Experience must open at Step 01 — not stuck at end (poisoned ST start)
  * 2) Career progress must advance while scrolling the sticky track
  * 3) Hero GSAP scrub must move stack + chapter opacity
  * 4) No localhost 404s for app assets (manifest included)
@@ -96,7 +96,7 @@ async function main() {
   }
   assert(/Building systems/i.test(heroB.name), "headline vanished mid-hero");
 
-  // ── Experience entry: MUST be Step 01, not 10/10 ──
+  // ── Experience entry: MUST be Step 01, not stuck at end ──
   await page.evaluate(() => scrollTo({ top: 0, behavior: "instant" }));
   await new Promise((r) => setTimeout(r, 300));
   await page.evaluate(() => {
@@ -125,7 +125,17 @@ async function main() {
     const start = Number(sticky?.dataset.start || 0);
     const end = Number(sticky?.dataset.end || 0);
     const progress = parseFloat(sticky?.dataset.progress || "1");
-    return { counter, step, start, end, progress, trackTop, pinEnd, scrollY: Math.round(scrollY) };
+    return {
+      counter,
+      step,
+      start,
+      end,
+      progress,
+      trackTop,
+      pinEnd,
+      scrollY: Math.round(scrollY),
+      cardCount: cards.length,
+    };
   });
 
   assert(xpStart.trackTop > 800, `experience too high trackTop=${xpStart.trackTop}`);
@@ -134,7 +144,8 @@ async function main() {
     `poisoned career start=${xpStart.start} trackTop=${xpStart.trackTop} pinEnd=${xpStart.pinEnd}`
   );
   assert(xpStart.progress < 0.2, `Experience stuck near end on entry: progress=${xpStart.progress}`);
-  assert(/01\s*\/\s*10/i.test(xpStart.counter), `counter not 01/10: "${xpStart.counter}"`);
+  assert(xpStart.cardCount === 12, `experience cards ${xpStart.cardCount} != 12`);
+  assert(/01\s*\/\s*12/i.test(xpStart.counter), `counter not 01/12: "${xpStart.counter}"`);
   assert(/STEP 01/i.test(xpStart.step), `card not Step 01: "${xpStart.step}"`);
 
   // ── Career advances ──
@@ -162,7 +173,7 @@ async function main() {
       "",
   }));
   assert(xpMid.progress > 0.3, `career did not advance: ${xpMid.progress}`);
-  assert(!/01\s*\/\s*10/i.test(xpMid.counter), `career still on 01 at mid: ${xpMid.counter}`);
+  assert(!/01\s*\/\s*12/i.test(xpMid.counter), `career still on 01 at mid: ${xpMid.counter}`);
 
   // ── Manifest (local) ──
   const manifestOk = await page.evaluate(async () => {
