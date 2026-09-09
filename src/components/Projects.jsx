@@ -86,6 +86,11 @@ function FeaturedCase({ project, index }) {
       <div className={`feat-copy min-w-0 ${flip ? "md:text-right" : ""}`}>
         <p className="eyebrow">{project.accent || "Unique engagement"}</p>
         <div className={`mt-3 flex flex-wrap items-center gap-2 ${flip ? "md:justify-end" : ""}`}>
+          {project.logo ? (
+            <span className="feat-case__logo" aria-hidden="true">
+              <img src={project.logo} alt="" width={56} height={28} loading="lazy" decoding="async" />
+            </span>
+          ) : null}
           <span className="font-mono text-xs tracking-[0.16em] text-forest">{project.index}</span>
           <Badge variant="default">{project.status}</Badge>
         </div>

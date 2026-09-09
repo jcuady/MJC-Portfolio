@@ -68,8 +68,8 @@ export default function CertModal({ cert, onClose }) {
             <h2 id={titleId}>{cert.name}</h2>
             <p>
               {cert.org}
-              {cert.year ? ` · ${cert.year}` : ""}
-              {cert.credentialId ? ` · ID ${cert.credentialId}` : ""}
+              {cert.year ? `, ${cert.year}` : ""}
+              {cert.credentialId ? `, ID ${cert.credentialId}` : ""}
             </p>
             {cert.note ? <p className="cert-modal__note">{cert.note}</p> : null}
           </div>

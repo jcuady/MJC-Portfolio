@@ -14,6 +14,7 @@
     "verify:mobile-stack": "node scripts/verify-mobile-stack.mjs",
     "verify:hero-video": "node scripts/verify-hero-video.mjs",
     "verify:qa": "node scripts/verify-qa.mjs",
+    "verify:experience": "node scripts/verify-experience.mjs",
     "verify:responsive": "node scripts/verify-responsive.mjs",
     "verify:parallax": "node scripts/verify-parallax.mjs",
     "verify:parallax-visible": "node scripts/verify-parallax-visible.mjs",

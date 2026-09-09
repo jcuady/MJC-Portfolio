@@ -31,7 +31,21 @@ export default function SelectedWorkCard() {
                 ) : null}
               </span>
               <span className="work-card__meta">
-                <span className="work-card__cat">{project.category}</span>
+                <span className="work-card__cat-row">
+                  {project.logo ? (
+                    <span className="work-card__logo" aria-hidden="true">
+                      <img
+                        src={project.logo}
+                        alt=""
+                        width={48}
+                        height={24}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </span>
+                  ) : null}
+                  <span className="work-card__cat">{project.category}</span>
+                </span>
                 <strong>{project.name}</strong>
                 <span className="work-card__desc">{project.desc}</span>
                 <span className="work-card__tags">

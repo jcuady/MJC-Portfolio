@@ -1,13 +1,15 @@
-import { ArrowRight, Award } from "lucide-react";
-import { certifications, heroSpecializations, profile } from "../../data/profile.jsx";
+import { ArrowRight, Award, Bookmark } from "lucide-react";
+import {
+  certifications,
+  featuredCertification,
+  heroSpecializations,
+  profile,
+} from "../../data/profile.jsx";
 import CertTrigger from "../CertTrigger.jsx";
-
-/** Prefer full-stack as the featured credential for engineering positioning. */
-const FEATURED_NAME = "Microsoft Full-Stack Developer Professional Certificate";
+import { cn } from "../../lib/utils.js";
 
 export default function SystemCard() {
-  const featured =
-    certifications.find((c) => c.name === FEATURED_NAME) ?? certifications[0];
+  const featured = featuredCertification;
   const rest = certifications.filter((c) => c.name !== featured.name);
 
   return (
@@ -22,9 +24,9 @@ export default function SystemCard() {
 
       <CertTrigger cert={featured} variant="featured">
         <span className="system-card__featured">
-          <Award size={16} strokeWidth={1.6} aria-hidden="true" />
+          <Bookmark size={16} strokeWidth={1.6} aria-hidden="true" />
           <span className="system-card__featured-copy">
-            <strong>{featured.name}</strong>
+            <strong>{featured.shortName || featured.name}</strong>
             <span>
               {featured.org}
               {featured.year ? `, ${featured.year}` : ""}
@@ -35,9 +37,14 @@ export default function SystemCard() {
 
       <ul className="system-card__list" aria-label={`${certifications.length} certifications`}>
         {rest.map((c) => (
-          <li key={c.name}>
+          <li key={c.name} className={cn(c.highlight && "is-highlight")}>
             <CertTrigger cert={c} variant="compact">
-              <span className="cert-trigger__label">{c.name}</span>
+              <span className="cert-trigger__label">
+                {c.highlight ? (
+                  <Award size={11} strokeWidth={1.75} className="system-card__star" aria-hidden="true" />
+                ) : null}
+                <span>{c.shortName || c.name}</span>
+              </span>
               {c.year ? <em>{c.year}</em> : <em>n/a</em>}
             </CertTrigger>
           </li>

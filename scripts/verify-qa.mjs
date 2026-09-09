@@ -113,7 +113,10 @@ async function main() {
     const counter = document.querySelector(".xp-counter")?.textContent?.trim() || "";
     const cards = [...document.querySelectorAll(".xp-card")];
     const on = cards.find((c) => parseFloat(getComputedStyle(c).opacity) > 0.5);
-    const step = on?.querySelector("p.font-mono")?.textContent?.trim() || "";
+    const step =
+      on?.querySelector(".xp-role-card__step-badge")?.textContent?.replace(/\s+/g, " ").trim() ||
+      on?.querySelector("p.font-mono")?.textContent?.trim() ||
+      "";
     const pinEnd = [...document.querySelectorAll(".pin-spacer")].reduce(
       (m, s) => Math.max(m, s.offsetTop + s.offsetHeight),
       0
@@ -149,8 +152,14 @@ async function main() {
     step:
       [...document.querySelectorAll(".xp-card")]
         .find((c) => parseFloat(getComputedStyle(c).opacity) > 0.5)
+        ?.querySelector(".xp-role-card__step-badge")
+        ?.textContent?.replace(/\s+/g, " ")
+        .trim() ||
+      [...document.querySelectorAll(".xp-card")]
+        .find((c) => parseFloat(getComputedStyle(c).opacity) > 0.5)
         ?.querySelector("p.font-mono")
-        ?.textContent?.trim() || "",
+        ?.textContent?.trim() ||
+      "",
   }));
   assert(xpMid.progress > 0.3, `career did not advance: ${xpMid.progress}`);
   assert(!/01\s*\/\s*10/i.test(xpMid.counter), `career still on 01 at mid: ${xpMid.counter}`);

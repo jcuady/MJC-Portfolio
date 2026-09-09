@@ -1,38 +1,68 @@
-import { useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { ChevronsDown } from "lucide-react";
 import { experience } from "../data/profile.jsx";
+import TimelineRail from "./experience/TimelineRail.jsx";
+import RoleCard from "./experience/RoleCard.jsx";
+import SnapshotCard from "./experience/SnapshotCard.jsx";
+import BottomPanels from "./experience/BottomPanels.jsx";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 /**
- * Career — latest-first (resume order).
- * CSS sticky track + scrub onUpdate — avoids GSAP multi-pin start desync.
+ * Career story — pinned desktop scroll, horizontal step rail on mobile.
+ * Keeps verify seams: .xp-track .xp-sticky .xp-card .xp-counter .xp-m-card .xp-num .xp-dot .xp-spine-fill
  */
 export default function Experience() {
   const rootRef = useRef(null);
   const career = experience;
   const n = career.length;
+  const [activeIndex, setActiveIndex] = useState(0);
+  const activeRef = useRef(0);
+  const stRef = useRef(null);
+
+  const setActive = useCallback((idx) => {
+    const next = Math.max(0, Math.min(n - 1, idx));
+    if (activeRef.current === next) return;
+    activeRef.current = next;
+    setActiveIndex(next);
+  }, [n]);
+
+  const scrollToStep = useCallback(
+    (idx) => {
+      const st = stRef.current || ScrollTrigger.getById("career");
+      if (!st) {
+        setActive(idx);
+        return;
+      }
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const progress = (idx + 0.42) / n;
+      const y = st.start + (st.end - st.start) * progress;
+      window.scrollTo({ top: y, behavior: reduce ? "auto" : "smooth" });
+    },
+    [n, setActive]
+  );
 
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
 
-      mm.add("(min-width: 768px)", () => {
+      mm.add("(min-width: 900px)", () => {
         const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         const track = rootRef.current.querySelector(".xp-track");
         const sticky = rootRef.current.querySelector(".xp-sticky");
         const items = gsap.utils.toArray(".xp-card");
         const dots = gsap.utils.toArray(".xp-dot");
         const nums = gsap.utils.toArray(".xp-num");
-        const counter = rootRef.current.querySelector(".xp-counter");
+        const counters = gsap.utils.toArray(".xp-counter");
         const fill = rootRef.current.querySelector(".xp-spine-fill");
+        const railItems = gsap.utils.toArray(".xp-rail__item");
         let st;
         let tl;
         let lastKey = "";
 
-        /** Measure career track in document space. No hero pin required. */
         const measure = () => {
           if (!track) return null;
           const absTop = Math.round(track.getBoundingClientRect().top + window.scrollY);
@@ -42,28 +72,44 @@ export default function Experience() {
           return { absTop, absEnd: Math.max(absTop + 100, absEnd) };
         };
 
+        const paintCounters = (idx) => {
+          const label = `${String(idx + 1).padStart(2, "0")} / ${String(n).padStart(2, "0")}`;
+          counters.forEach((c) => {
+            c.textContent = label;
+          });
+        };
+
+        const paintRail = (idx) => {
+          railItems.forEach((el, i) => {
+            el.classList.toggle("is-active", i === idx);
+          });
+        };
+
         const mount = () => {
           const geo = measure();
           if (!geo) return false;
           const key = `${geo.absTop}:${geo.absEnd}`;
-          if (key === lastKey && st) return true;
+          if (key === lastKey && st) {
+            stRef.current = st;
+            return true;
+          }
           lastKey = key;
 
           st?.kill();
           tl?.kill();
 
-          gsap.set(items, { autoAlpha: 0, y: 16 });
+          gsap.set(items, { autoAlpha: 0, y: 14 });
           gsap.set(items[0], { autoAlpha: 1, y: 0 });
-          gsap.set(dots, { scale: 0.65, backgroundColor: "transparent" });
-          gsap.set(dots[0], { scale: 1.2, backgroundColor: "var(--spark)" });
-          gsap.set(nums, { autoAlpha: 0.35 });
+          gsap.set(dots, { scale: 0.7, backgroundColor: "transparent" });
+          gsap.set(dots[0], { scale: 1.15, backgroundColor: "var(--accent)" });
+          gsap.set(nums, { autoAlpha: 0.38 });
           gsap.set(nums[0], { autoAlpha: 1 });
           if (fill) gsap.set(fill, { scaleY: 0 });
-          if (counter) {
-            counter.textContent = `01 / ${String(n).padStart(2, "0")}`;
-          }
+          paintCounters(0);
+          paintRail(0);
+          setActive(0);
 
-          const fade = reduce ? 0.035 : 0.065;
+          const fade = reduce ? 0.03 : 0.055;
           const slot = 1 / n;
           const { absTop, absEnd } = geo;
 
@@ -74,15 +120,14 @@ export default function Experience() {
               trigger: track,
               start: absTop,
               end: absEnd,
-              scrub: reduce ? 0.18 : 0.7,
-              // NEVER refresh-remeasure — GSAP briefly unpins and poisons Y
+              scrub: reduce ? 0.15 : 0.65,
               invalidateOnRefresh: false,
               refreshPriority: -80,
               onUpdate: (self) => {
                 const idx = Math.min(n - 1, Math.floor(self.progress * n + 0.0001));
-                if (counter) {
-                  counter.textContent = `${String(idx + 1).padStart(2, "0")} / ${String(n).padStart(2, "0")}`;
-                }
+                paintCounters(idx);
+                paintRail(idx);
+                setActive(idx);
                 if (sticky) {
                   sticky.dataset.progress = self.progress.toFixed(3);
                   sticky.dataset.idx = String(idx);
@@ -91,30 +136,24 @@ export default function Experience() {
             },
           });
           st = tl.scrollTrigger;
+          stRef.current = st;
 
           if (fill) tl.to(fill, { scaleY: 1, duration: 1 }, 0);
 
           items.forEach((item, i) => {
             if (i === 0) return;
             const t = i * slot;
-            tl.to(items[i - 1], { autoAlpha: 0, y: -12, duration: fade }, t - fade);
-            tl.to(dots[i - 1], { scale: 0.65, backgroundColor: "transparent", duration: fade }, t - fade);
-            tl.to(nums[i - 1], { autoAlpha: 0.35, duration: fade }, t - fade);
-            tl.fromTo(
-              item,
-              { autoAlpha: 0, y: 18 },
-              { autoAlpha: 1, y: 0, duration: fade },
-              t
-            );
-            tl.to(dots[i], { scale: 1.2, backgroundColor: "var(--spark)", duration: fade }, t);
+            tl.to(items[i - 1], { autoAlpha: 0, y: -10, duration: fade }, t - fade);
+            tl.to(dots[i - 1], { scale: 0.7, backgroundColor: "transparent", duration: fade }, t - fade);
+            tl.to(nums[i - 1], { autoAlpha: 0.38, duration: fade }, t - fade);
+            tl.fromTo(item, { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: fade }, t);
+            tl.to(dots[i], { scale: 1.15, backgroundColor: "var(--accent)", duration: fade }, t);
             tl.to(nums[i], { autoAlpha: 1, duration: fade }, t);
             if (!reduce) {
-              tl.fromTo(
-                item.querySelectorAll(".xp-line"),
-                { yPercent: 50 },
-                { yPercent: 0, duration: fade * 0.9 },
-                t + fade * 0.05
-              );
+              const lines = item.querySelectorAll(".xp-line");
+              if (lines.length) {
+                tl.fromTo(lines, { yPercent: 40 }, { yPercent: 0, duration: fade * 0.85 }, t + fade * 0.04);
+              }
             }
           });
 
@@ -125,14 +164,12 @@ export default function Experience() {
           return true;
         };
 
-        // Retry until pin spacers are real (HMR / StrictMode / late pin)
         const tryMount = () => mount();
-        const timers = [200, 500, 1000, 1600, 2400].map((ms) => setTimeout(tryMount, ms));
+        const timers = [160, 420, 900, 1500, 2200].map((ms) => setTimeout(tryMount, ms));
         const iv = setInterval(tryMount, 400);
-        const stopIv = setTimeout(() => clearInterval(iv), 6000);
-        const onLoad = () => setTimeout(tryMount, 80);
+        const stopIv = setTimeout(() => clearInterval(iv), 5500);
+        const onLoad = () => setTimeout(tryMount, 60);
         window.addEventListener("load", onLoad);
-        // Resize (orientation) — remount when pin geometry changes; measure() rejects unpin frames
         const onResize = () => {
           lastKey = "";
           tryMount();
@@ -147,23 +184,24 @@ export default function Experience() {
           window.removeEventListener("resize", onResize);
           tl?.kill();
           st?.kill();
+          stRef.current = null;
         };
       });
 
-      mm.add("(max-width: 767px)", () => {
-        gsap.set(".xp-card", { autoAlpha: 1 });
+      mm.add("(max-width: 899px)", () => {
+        gsap.set(".xp-card", { clearProps: "all" });
         gsap.set(".xp-spine-fill", { scaleY: 1 });
-        gsap.set(".xp-dot", { scale: 1, backgroundColor: "var(--spark)" });
+        gsap.set(".xp-dot", { scale: 1, backgroundColor: "var(--accent)" });
         gsap.set(".xp-num", { autoAlpha: 1 });
         if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-          ScrollTrigger.batch(".xp-m-card", {
-            start: "top 90%",
+          ScrollTrigger.batch(".xp-m-enter", {
+            start: "top 92%",
             once: true,
             onEnter: (els) =>
               gsap.fromTo(
                 els,
-                { autoAlpha: 0, y: 16 },
-                { autoAlpha: 1, y: 0, stagger: 0.07, duration: 0.45, ease: "power2.out" }
+                { autoAlpha: 0, y: 14 },
+                { autoAlpha: 1, y: 0, stagger: 0.06, duration: 0.42, ease: "power2.out" }
               ),
           });
         }
@@ -171,149 +209,138 @@ export default function Experience() {
 
       return () => mm.revert();
     },
-    { scope: rootRef, dependencies: [n] }
+    { scope: rootRef, dependencies: [n, setActive] }
   );
+
+  const activeJob = career[activeIndex] || career[0];
 
   return (
     <section id="experience" ref={rootRef} className="xp-pin relative z-0 bg-[var(--bg)]">
-      {/* Tall track = scroll runway; sticky panel fills the frame */}
+      {/* Desktop / large tablet: pinned career story */}
       <div
-        className="xp-track relative hidden md:block"
-        style={{ height: `${Math.max(n, 3) * 72}vh` }}
+        className="xp-track relative hidden min-[900px]:block"
+        style={{ height: `${Math.max(n, 3) * 78}vh` }}
       >
         <div className="xp-sticky sticky top-0 flex h-[100svh] flex-col overflow-hidden bg-[var(--bg)]">
-          <div className="wrap flex min-h-0 flex-1 flex-col py-8 sm:py-10">
-            <div className="flex shrink-0 flex-wrap items-end justify-between gap-4">
-              <div className="max-w-2xl">
-                <p className="eyebrow">Career progression</p>
+          <div className="wrap xp-shell flex min-h-0 flex-1 flex-col py-[clamp(1rem,2.2vh,1.75rem)]">
+            <header className="xp-intro shrink-0">
+              <div className="xp-intro__copy">
+                <p className="eyebrow">Career journey</p>
                 <h2 className="section-title mt-2">Experience</h2>
-                <p className="section-lead">
+                <p className="section-lead xp-intro__lead">
                   Latest first — matching the resume. Each role is its own step, including Kadokohi,
                   Offgrid, and MGC Architecture.
                 </p>
               </div>
-              <p
-                className="xp-counter font-mono text-sm tracking-widest text-forest"
-                aria-live="polite"
-              >
-                01 / {String(n).padStart(2, "0")}
-              </p>
-            </div>
+              <div className="xp-intro__art" aria-hidden="true">
+                <svg className="xp-topo" viewBox="0 0 280 120" fill="none">
+                  <path
+                    d="M8 92c24-28 44-44 68-44s40 22 62 22 38-28 70-28 48 24 64 40"
+                    stroke="currentColor"
+                    strokeWidth="1"
+                    opacity="0.35"
+                  />
+                  <path
+                    d="M4 104c28-22 52-36 78-36s44 18 66 18 40-24 72-24 46 20 56 32"
+                    stroke="currentColor"
+                    strokeWidth="1"
+                    opacity="0.22"
+                  />
+                  <path
+                    d="M12 78c20-18 40-30 58-30s34 16 52 16 36-22 62-22 48 18 70 34"
+                    stroke="currentColor"
+                    strokeWidth="1"
+                    opacity="0.16"
+                  />
+                </svg>
+                <p className="xp-intro__mantra">Build / Learn / Improve / Repeat</p>
+              </div>
+            </header>
 
-            <div className="mt-6 grid min-h-0 flex-1 gap-6 md:grid-cols-[minmax(128px,168px)_minmax(0,1fr)] md:gap-10 lg:gap-14">
-              <div className="relative self-stretch" aria-hidden="true">
-                <div className="absolute bottom-1 left-[9px] top-1 w-px bg-deep" />
-                <div
-                  className="xp-spine-fill absolute bottom-1 left-[9px] top-1 w-px origin-top bg-spring"
-                  style={{ transform: "scaleY(0)" }}
-                />
-                <ol className="relative flex h-full min-h-0 flex-col justify-between py-0.5">
+            <div className="xp-compose mt-[clamp(0.75rem,1.8vh,1.25rem)] grid min-h-0 flex-1 gap-[clamp(0.85rem,1.6vw,1.35rem)]">
+              <TimelineRail
+                career={career}
+                activeIndex={activeIndex}
+                onSelect={scrollToStep}
+                variant="desktop"
+              />
+
+              <div className="xp-stage-col min-h-0">
+                <div className="xp-stage relative min-h-0 flex-1">
                   {career.map((job, i) => (
-                    <li key={job.period + job.org} className="flex items-start gap-2.5">
-                      <span className="xp-dot mt-1 h-2.5 w-2.5 shrink-0 rounded-full border-2 border-spring bg-transparent" />
-                      <div className="min-w-0">
-                        <p className="xp-num font-mono text-xs uppercase tracking-[0.14em] text-soft">
-                          {String(i + 1).padStart(2, "0")}
-                        </p>
-                        <p className="mt-0.5 font-mono text-xs leading-tight text-forest lg:text-xs">
-                          {job.period}
-                        </p>
-                      </div>
-                    </li>
+                    <RoleCard
+                      key={job.role + job.org}
+                      job={job}
+                      index={i}
+                      total={n}
+                      mode="desktop"
+                      className="absolute inset-0"
+                      onPrev={() => scrollToStep(i - 1)}
+                      onNext={() => scrollToStep(i + 1)}
+                    />
                   ))}
-                </ol>
+                </div>
+                <div className="xp-stage-bottom shrink-0">
+                  <BottomPanels job={activeJob} />
+                </div>
               </div>
 
-              <div className="xp-stage relative min-h-0">
-                {career.map((job, i) => (
-                  <article
-                    key={job.role + job.org}
-                    className="xp-card absolute inset-0 flex flex-col justify-center overflow-hidden pr-2"
-                  >
-                    <p className="font-mono text-xs uppercase tracking-[0.18em] text-forest">
-                      Step {String(i + 1).padStart(2, "0")}
-                    </p>
-                    <h3 className="mt-3 font-display text-2xl font-bold tracking-tight text-mist lg:text-3xl">
-                      <span className="line-mask block">
-                        <span className="xp-line inline-block">{job.role}</span>
-                      </span>
-                    </h3>
-                    {job.url ? (
-                      <a
-                        href={job.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-2 inline-block cursor-pointer text-base font-medium transition-colors hover:underline"
-                        style={{ color: "var(--spark)" }}
-                      >
-                        {job.org}
-                      </a>
-                    ) : (
-                      <p className="mt-2 text-base font-medium" style={{ color: "var(--spark)" }}>
-                        {job.org}
-                      </p>
-                    )}
-                    <p className="mt-1 font-mono text-xs text-forest">{job.period}</p>
-                    <ul className="mt-5 max-w-2xl space-y-2">
-                      {job.points.map((pt) => (
-                        <li
-                          key={pt}
-                          className="flex gap-3 text-sm leading-relaxed text-soft lg:text-[15px]"
-                        >
-                          <span className="mt-[8px] h-1.5 w-1.5 shrink-0 rounded-full bg-spring" />
-                          {pt}
-                        </li>
-                      ))}
-                    </ul>
-                  </article>
-                ))}
+              <div className="xp-snap-col min-h-0">
+                <SnapshotCard job={activeJob} />
               </div>
             </div>
 
-            <p className="mt-4 shrink-0 text-center mono-tag text-forest">Scroll to advance career</p>
+            <p className="xp-scroll-hint shrink-0">
+              <ChevronsDown size={14} strokeWidth={1.75} aria-hidden="true" />
+              Scroll to advance career
+              <ChevronsDown size={14} strokeWidth={1.75} aria-hidden="true" />
+            </p>
           </div>
         </div>
       </div>
 
-      {/* Mobile: stacked list, no sticky pin */}
-      <div className="wrap py-10 md:hidden">
-        <p className="eyebrow">Career progression</p>
+      {/* Mobile / compact: horizontal steps + stacked story */}
+      <div className="wrap xp-mobile py-10 min-[900px]:hidden">
+        <p className="eyebrow">Career journey</p>
         <h2 className="section-title mt-2">Experience</h2>
         <p className="section-lead">
           Latest first — matching the resume. Kadokohi, Offgrid, and MGC Architecture each own a
           step.
         </p>
-        <div className="xp-mobile mt-8 space-y-8">
+
+        <div className="mt-5">
+          <TimelineRail
+            career={career}
+            activeIndex={activeIndex}
+            onSelect={setActive}
+            variant="mobile"
+          />
+        </div>
+
+        <div className="xp-mobile-stack mt-5 space-y-4">
+          <div className="xp-m-enter">
+            <RoleCard job={activeJob} index={activeIndex} total={n} mode="mobile" />
+          </div>
+          <div className="xp-m-enter">
+            <SnapshotCard job={activeJob} />
+          </div>
+          <div className="xp-m-enter">
+            <BottomPanels job={activeJob} />
+          </div>
+        </div>
+
+        {/* Full list for verify + a11y parity */}
+        <div className="mt-10 space-y-6 border-t border-deep/70 pt-8">
+          <p className="font-mono text-xs uppercase tracking-[0.16em] text-forest">All roles</p>
           {career.map((job, i) => (
-            <article key={job.role + job.org} className="xp-m-card border-l-2 border-deep pl-4">
-              <p className="font-mono text-xs tracking-wide text-forest">
-                {String(i + 1).padStart(2, "0")} · {job.period}
-              </p>
-              <h3 className="mt-1.5 font-display text-xl font-semibold text-mist">{job.role}</h3>
-              {job.url ? (
-                <a
-                  href={job.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="cursor-pointer text-sm font-medium transition-colors hover:underline"
-                  style={{ color: "var(--spark)" }}
-                >
-                  {job.org}
-                </a>
-              ) : (
-                <p className="text-sm font-medium" style={{ color: "var(--spark)" }}>
-                  {job.org}
-                </p>
-              )}
-              <ul className="mt-3 space-y-1.5">
-                {job.points.map((pt) => (
-                  <li key={pt} className="flex gap-2.5 text-sm leading-relaxed text-soft">
-                    <span className="mt-[8px] h-1 w-1 shrink-0 rounded-full bg-spring" />
-                    {pt}
-                  </li>
-                ))}
-              </ul>
-            </article>
+            <RoleCard
+              key={`list-${job.role}-${job.org}`}
+              job={job}
+              index={i}
+              total={n}
+              mode="mobile"
+              className="xp-m-card"
+            />
           ))}
         </div>
       </div>

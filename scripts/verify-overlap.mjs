@@ -160,7 +160,10 @@ async function main() {
     });
     const cards = [...document.querySelectorAll(".xp-card")];
     const on = cards.find((c) => parseFloat(getComputedStyle(c).opacity) > 0.5);
-    const stepText = on?.querySelector("p.font-mono")?.textContent || "";
+    const stepText =
+      on?.querySelector(".xp-role-card__step-badge")?.textContent?.replace(/\s+/g, " ").trim() ||
+      on?.querySelector("p.font-mono")?.textContent?.trim() ||
+      "";
     const stuck = sticky && Math.abs(sticky.getBoundingClientRect().top) < 4;
     const progress = parseFloat(sticky?.dataset.progress || "1");
     return {

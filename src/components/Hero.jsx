@@ -10,7 +10,6 @@ import SelectedWorkCard from "./portfolio/SelectedWorkCard.jsx";
 import TechStackCard from "./portfolio/TechStackCard.jsx";
 import SystemCard from "./portfolio/SystemCard.jsx";
 import UiUxCard from "./portfolio/UiUxCard.jsx";
-import IndustryPlaceholderStrip from "./portfolio/IndustryPlaceholderStrip.jsx";
 
 gsap.registerPlugin(useGSAP);
 
@@ -115,7 +114,6 @@ export default function Hero() {
               </div>
             </div>
           </div>
-          <IndustryPlaceholderStrip />
         </div>
       </div>
     </section>

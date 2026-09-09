@@ -1,5 +1,6 @@
 import Nav from "./components/Nav.jsx";
 import Hero from "./components/Hero.jsx";
+import ClientLogoWall from "./components/portfolio/ClientLogoWall.jsx";
 import Statement from "./components/Statement.jsx";
 import Projects from "./components/Projects.jsx";
 import Experience from "./components/Experience.jsx";
@@ -19,6 +20,7 @@ export default function App() {
       <Nav />
       <main>
         <Hero />
+        <ClientLogoWall />
         <Statement />
         <Experience />
         <Projects />

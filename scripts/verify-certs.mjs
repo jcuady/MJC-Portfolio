@@ -20,7 +20,7 @@ function assert(cond, msg) {
   if (!cond) throw new Error(msg);
 }
 
-const EXPECTED = 17;
+const EXPECTED = 18;
 
 async function main() {
   assert(CHROME, "Chrome not found");
@@ -56,13 +56,22 @@ async function main() {
     const metrics = await page.evaluate((expected) => {
       const section = document.getElementById("certifications");
       const cardTriggers = document.querySelectorAll(".system-card .cert-trigger");
-      const ledgerTriggers = document.querySelectorAll(".certs-section .cert-trigger");
+      const ledgerTriggers = document.querySelectorAll(
+        ".certs-section .cert-trigger, .certs-ledger .cert-trigger"
+      );
+      // Deduplicate by cert name text in case highlight + group both render
+      const ledgerNames = new Set(
+        [...document.querySelectorAll(".certs-ledger__title")].map((el) =>
+          el.childNodes[0]?.textContent?.trim()
+        )
+      );
       const countBadge = document.querySelector(".certs-section__count span")?.textContent?.trim();
       const overflowX = document.documentElement.scrollWidth > innerWidth + 2;
       return {
         sectionOk: Boolean(section),
         cardCount: cardTriggers.length,
         ledgerCount: ledgerTriggers.length,
+        uniqueLedger: ledgerNames.size,
         countBadge,
         overflowX,
         expected,
@@ -75,9 +84,10 @@ async function main() {
       `${vp.id}: system card triggers ${metrics.cardCount} != ${EXPECTED}`
     );
     assert(
-      metrics.ledgerCount === EXPECTED,
-      `${vp.id}: ledger triggers ${metrics.ledgerCount} != ${EXPECTED}`
+      metrics.uniqueLedger === EXPECTED,
+      `${vp.id}: unique ledger certs ${metrics.uniqueLedger} != ${EXPECTED}`
     );
+    assert(metrics.ledgerCount >= EXPECTED, `${vp.id}: ledger triggers ${metrics.ledgerCount}`);
     assert(metrics.countBadge === String(EXPECTED), `${vp.id}: badge ${metrics.countBadge}`);
     assert(!metrics.overflowX, `${vp.id}: horizontal overflow`);
 

@@ -1,9 +1,44 @@
 import { motion } from "framer-motion";
-import { Award, ExternalLink, FileText } from "lucide-react";
-import { certifications, certificationGroups, profile } from "../data/profile.jsx";
+import { Award, Bookmark, ExternalLink, FileText } from "lucide-react";
+import {
+  certifications,
+  certificationGroups,
+  highlightCertifications,
+  profile,
+} from "../data/profile.jsx";
 import CertTrigger from "./CertTrigger.jsx";
+import { cn } from "../lib/utils.js";
+
+function CertRow({ cert, featured = false }) {
+  return (
+    <li className={cn("certs-ledger__row", featured && "is-featured", cert.highlight && "is-highlight")}>
+      <CertTrigger cert={cert} variant="row">
+        <span className="certs-ledger__main">
+          <span className="certs-ledger__icon" aria-hidden="true">
+            {featured || cert.highlight ? (
+              <Bookmark size={15} strokeWidth={1.75} />
+            ) : cert.pdf ? (
+              <FileText size={15} strokeWidth={1.75} />
+            ) : (
+              <Award size={15} strokeWidth={1.75} />
+            )}
+          </span>
+          <span className="certs-ledger__copy">
+            <span className="certs-ledger__title">{cert.name}</span>
+            <span className="certs-ledger__org">{cert.org}</span>
+            {cert.note ? <span className="certs-ledger__note">{cert.note}</span> : null}
+          </span>
+          <span className="certs-ledger__year">{cert.year || "n/a"}</span>
+        </span>
+      </CertTrigger>
+    </li>
+  );
+}
 
 export default function Certifications() {
+  const featured = highlightCertifications.slice(0, 5);
+  const featuredNames = new Set(featured.map((c) => c.name));
+
   const grouped = certificationGroups.map((g) => ({
     ...g,
     items: certifications.filter((c) => c.group === g.id),
@@ -24,64 +59,52 @@ export default function Certifications() {
             </p>
           </div>
           <p className="certs-section__lede">
-            Full set of {certifications.length} credentials. Hover a row for a certificate peek; click to open
-            the full modal viewer.
+            Complete credential set ({certifications.length}). Hover for a PDF peek; click to open the
+            full certificate. Highlighted rows are the strongest signals for engineering, AI, cloud,
+            and delivery roles.
           </p>
         </div>
+
+        <motion.div
+          className="certs-ledger certs-ledger--featured"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <header className="certs-ledger__head">
+            <span className="certs-ledger__mark" aria-hidden="true">
+              <Bookmark size={16} strokeWidth={1.75} />
+            </span>
+            <div>
+              <h3>Highlighted credentials</h3>
+              <p>Priority signals for full-stack, AI, cloud, and delivery interviews.</p>
+            </div>
+          </header>
+          <ul className="certs-ledger__list">
+            {featured.map((c) => (
+              <CertRow key={c.name} cert={c} featured />
+            ))}
+          </ul>
+        </motion.div>
 
         <div className="certs-section__groups">
           {grouped.map((group, gi) => (
             <motion.div
               key={group.id}
-              className="certs-group"
-              initial={{ opacity: 0, y: 20 }}
+              className="certs-ledger"
+              initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.5, delay: gi * 0.05, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.45, delay: gi * 0.04, ease: [0.16, 1, 0.3, 1] }}
             >
-              <h3 className="certs-group__label">{group.label}</h3>
-              <ul className="certs-group__list">
+              <header className="certs-ledger__head certs-ledger__head--compact">
+                <h3>{group.label}</h3>
+                <span className="certs-ledger__count">{group.items.length}</span>
+              </header>
+              <ul className="certs-ledger__list">
                 {group.items.map((c) => (
-                  <li key={c.name} className="certs-item">
-                    <div className="certs-item__main">
-                      <CertTrigger cert={c} variant="ledger">
-                        <span className="certs-item__name">
-                          {c.pdf ? (
-                            <FileText size={15} strokeWidth={1.75} aria-hidden="true" />
-                          ) : (
-                            <Award size={15} strokeWidth={1.75} aria-hidden="true" />
-                          )}
-                          <span>{c.name}</span>
-                        </span>
-                      </CertTrigger>
-                      <p className="certs-item__meta">
-                        {c.org}
-                        {c.credentialId ? ` · ID ${c.credentialId}` : ""}
-                        {c.verify ? (
-                          <>
-                            {" · "}
-                            <a
-                              href={c.verify}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              Verify
-                              <ExternalLink size={11} strokeWidth={1.75} aria-hidden="true" />
-                            </a>
-                          </>
-                        ) : null}
-                      </p>
-                      {c.note ? <p className="certs-item__note">{c.note}</p> : null}
-                    </div>
-                    {c.year ? (
-                      <time className="certs-item__year" dateTime={c.year}>
-                        {c.year}
-                      </time>
-                    ) : (
-                      <span className="certs-item__year certs-item__year--empty">n/a</span>
-                    )}
-                  </li>
+                  <CertRow key={c.name} cert={c} featured={featuredNames.has(c.name) && c.highlight} />
                 ))}
               </ul>
             </motion.div>
