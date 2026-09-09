@@ -57,7 +57,7 @@ export default function TimelineRail({
                 <span className="xp-dot" aria-hidden="true" />
                 <span className="xp-rail__meta">
                   <span className="xp-num">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="xp-rail__period">{job.period}</span>
+                  <span className="xp-rail__period">{job.yearLabel || job.period}</span>
                 </span>
               </button>
             </li>
@@ -65,7 +65,8 @@ export default function TimelineRail({
         })}
       </ol>
       <p className="xp-rail__foot">
-        {String(career.length).padStart(2, "0")} roles / a closer tomorrow
+        <span>{String(career.length).padStart(2, "0")} roles</span>
+        <span className="xp-rail__foot-tag"> · Closer tomorrow</span>
       </p>
     </aside>
   );

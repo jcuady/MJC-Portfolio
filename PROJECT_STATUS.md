@@ -31,13 +31,14 @@ Updated: 2026-09-09
 PASS verify-inventory (12 roles, 18 certs, assets, NDA banlist)
 PASS npm run build
 PASS verify-experience
+PASS verify-xp-ui (375 / 768 / 1440 — no overflow, no rail overlap, tech chips on snapshots)
 PASS verify-certs (18)
 PASS verify-qa
 PASS verify-overlap
 PASS verify-seo (Lighthouse SEO 100)
 ```
 
-Ran against `http://127.0.0.1:4173/` after production build.
+Experience UI (2026-09-09): timeline foot no longer overlaps steps 10–12; Project Snapshot shows tech-stack chips with logos for development roles.
 
 ## Known debt
 

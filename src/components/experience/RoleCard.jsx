@@ -143,7 +143,7 @@ export default function RoleCard({
       </ul>
 
       {job.tech?.length ? (
-        <ul className="xp-role-card__tech">
+        <ul className="xp-role-card__tech" aria-label="Technologies">
           {job.tech.slice(0, 6).map((t) => (
             <li key={t}>
               <Badge variant="outline" className="xp-tech-pill">

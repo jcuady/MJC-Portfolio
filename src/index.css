@@ -3650,21 +3650,25 @@ html.dark .profile-card__avail span {
   display: flex;
 }
 
-/* Timeline rail */
+/* Timeline rail — list scrolls; foot never overlaps steps */
 .xp-rail {
   position: relative;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  max-height: 100%;
   min-height: 0;
-  padding-right: 0.25rem;
+  padding-right: 0.2rem;
+  overflow: hidden;
 }
 
 .xp-rail__spine {
   position: absolute;
   top: 0.35rem;
-  bottom: 2.4rem;
+  bottom: 3.25rem;
   left: 0.55rem;
   width: 1px;
+  pointer-events: none;
 }
 
 .xp-rail__track {
@@ -3683,23 +3687,27 @@ html.dark .profile-card__avail span {
 .xp-rail__list {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0 0.15rem 0 0;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   flex: 1 1 auto;
   min-height: 0;
-  gap: 0.15rem;
+  gap: 0.05rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--accent) 35%, transparent) transparent;
 }
 
 .xp-rail__btn {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 0.55rem;
+  gap: 0.45rem;
   align-items: start;
   width: 100%;
-  min-height: 44px;
-  padding: 0.2rem 0.3rem 0.2rem 0;
+  min-height: 40px;
+  padding: 0.18rem 0.25rem 0.18rem 0;
   border: 0;
   background: transparent;
   color: inherit;
@@ -3761,13 +3769,24 @@ html.dark .profile-card__avail span {
 }
 
 .xp-rail__foot {
-  margin: 0.75rem 0 0;
+  flex: 0 0 auto;
+  display: grid;
+  gap: 0.15rem;
+  margin: 0.55rem 0 0;
+  padding: 0.55rem 0 0;
+  border-top: 1px solid color-mix(in srgb, var(--fg) 8%, transparent);
   font-family: "JetBrains Mono", monospace;
   font-size: 0.58rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--muted);
   line-height: 1.35;
+  z-index: 1;
+  background: var(--bg);
+}
+
+.xp-rail__foot-tag {
+  color: color-mix(in srgb, var(--accent-soft) 70%, var(--muted));
 }
 
 /* Role card */
@@ -3815,8 +3834,8 @@ html.dark .profile-card__avail span {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 999px;
   border: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
   background: transparent;
@@ -3882,7 +3901,8 @@ html.dark .profile-card__avail span {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  margin-top: 0.4rem;
+  margin: 0;
+  min-width: 0;
   font-size: 0.95rem;
   font-weight: 650;
   color: var(--accent-soft);
@@ -3896,7 +3916,8 @@ html.dark .profile-card__avail span {
 }
 
 .xp-role-card__org--plain {
-  margin: 0.4rem 0 0;
+  margin: 0;
+  color: var(--fg);
 }
 
 .xp-role-card__meta {
@@ -3978,12 +3999,13 @@ html.dark .profile-card__avail span {
   font-size: 0.68rem;
 }
 
-/* Snapshot */
+/* Snapshot — preview + copy + tech stack (dev roles) */
 .xp-snap {
   display: flex;
   flex-direction: column;
   width: 100%;
   min-width: 0;
+  height: 100%;
   padding: 0.75rem;
   border-radius: 1.05rem;
   border: 1px solid color-mix(in srgb, var(--fg) 8%, transparent);
@@ -3992,15 +4014,23 @@ html.dark .profile-card__avail span {
 }
 
 .xp-snap__frame {
+  flex: 0 0 auto;
   border-radius: 0.75rem;
   overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--fg) 8%, transparent);
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 10;
   background: var(--bg);
 }
 
+.xp-snap__body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
 .xp-snap__eyebrow {
-  margin: 0.75rem 0 0;
+  margin: 0.7rem 0 0;
   font-family: "JetBrains Mono", monospace;
   font-size: 0.62rem;
   letter-spacing: 0.14em;
@@ -4034,6 +4064,57 @@ html.dark .profile-card__avail span {
   font-size: 0.8rem;
   line-height: 1.45;
   color: var(--soft);
+}
+
+.xp-snap__stack {
+  margin-top: 0.75rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid color-mix(in srgb, var(--fg) 8%, transparent);
+}
+
+.xp-snap__stack-label {
+  margin: 0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.xp-snap__tech {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.xp-snap__tech-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  max-width: 100%;
+  min-height: 32px;
+  padding: 0.28rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
+  background: color-mix(in srgb, var(--fg) 3.5%, transparent);
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--fg);
+}
+
+.xp-snap__tech-icon {
+  flex: 0 0 auto;
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+html.dark .xp-snap__tech-icon,
+[data-theme="dark"] .xp-snap__tech-icon {
+  filter: brightness(1.15);
 }
 
 /* Bottom panels */
@@ -4072,7 +4153,7 @@ html.dark .profile-card__avail span {
   padding: 0;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.55rem;
+  gap: 0.7rem 0.75rem;
 }
 
 .xp-impact__label {
@@ -4083,9 +4164,9 @@ html.dark .profile-card__avail span {
 }
 
 .xp-impact__detail {
-  margin: 0.25rem 0 0;
-  font-size: 0.7rem;
-  line-height: 1.4;
+  margin: 0.28rem 0 0;
+  font-size: 0.72rem;
+  line-height: 1.45;
   color: var(--soft);
 }
 
@@ -4168,6 +4249,10 @@ html.dark .profile-card__avail span {
   .xp-impact__grid {
     grid-template-columns: 1fr;
   }
+
+  .xp-snap__frame {
+    aspect-ratio: 16 / 11;
+  }
 }
 
 @media (max-width: 899px) {
@@ -4178,11 +4263,32 @@ html.dark .profile-card__avail span {
   .xp-impact__grid {
     grid-template-columns: 1fr;
   }
+
+  .xp-snap {
+    height: auto;
+  }
+
+  .xp-snap__frame {
+    aspect-ratio: 16 / 10;
+    min-height: 10.5rem;
+  }
+
+  .xp-snap__tech-chip {
+    min-height: 36px;
+  }
+
+  .xp-mobile-step {
+    min-width: 5rem;
+  }
 }
 
 @media (max-width: 420px) {
   .xp-role-card__meta {
     grid-template-columns: 1fr;
+  }
+
+  .xp-snap__tech {
+    gap: 0.3rem;
   }
 }
 
