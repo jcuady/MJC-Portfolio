@@ -17,9 +17,9 @@ const chipVariants = {
 
 export default function Skills() {
   return (
-    <section id="stack" className="section-pad relative">
+    <section id="stack" className="section-pad relative overflow-x-clip">
       <span id="skills" className="sr-only" />
-      <div className="glow-mint absolute -left-40 top-1/4 h-[55vmin] w-[55vmin] opacity-60" aria-hidden="true" />
+      <div className="glow-mint pointer-events-none absolute -left-24 top-1/4 h-[40vmin] w-[40vmin] opacity-50 sm:-left-40 sm:h-[55vmin] sm:w-[55vmin] sm:opacity-60" aria-hidden="true" />
       <div className="wrap relative">
         <p className="eyebrow">Capabilities</p>
         <h2 className="section-title mt-3">Stack</h2>
@@ -51,7 +51,7 @@ export default function Skills() {
                         key={name}
                         variants={chipVariants}
                         whileHover={{ y: -2 }}
-                        className="inline-flex items-center gap-2 rounded-xl border border-deep/80 bg-obsidian/40 px-3.5 py-2.5 text-sm text-mist transition-colors hover:border-mint/40"
+                        className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-deep/80 bg-obsidian/40 px-3.5 py-2.5 text-sm text-mist transition-colors hover:border-mint/40"
                       >
                         {Icon ? <Icon size={16} style={{ color }} aria-hidden="true" /> : null}
                         {name}

@@ -7,9 +7,9 @@ import { profile } from "../data/profile.jsx";
 
 export default function Footer() {
   return (
-    <footer id="contact" className="section-pad relative border-t border-deep/60">
+    <footer id="contact" className="section-pad relative overflow-x-clip border-t border-deep/60">
       <div
-        className="glow-mint absolute left-1/2 top-0 h-[45vmin] w-[60vmin] -translate-x-1/2 -translate-y-1/3"
+        className="glow-mint pointer-events-none absolute left-1/2 top-0 h-[36vmin] w-[70vmin] max-w-[100vw] -translate-x-1/2 -translate-y-1/3 sm:h-[45vmin] sm:w-[60vmin]"
         aria-hidden="true"
       />
       <div className="wrap relative text-center">
@@ -26,18 +26,18 @@ export default function Footer() {
           <span className="text-spring">Let&apos;s ship it.</span>
         </motion.h2>
         <p className="mx-auto mt-5 max-w-md text-soft">
-          Open to full-time full-stack, AI platform, and operations-engineering
-          roles. Happy to walk through shipped systems in an interview.
+          Digital Systems Development Officer at EastWest Bank. Happy to walk
+          through shipped systems and prior product work in an interview.
         </p>
 
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-          <Button asChild size="lg">
-            <a href={`mailto:${profile.email}`}>
-              <Mail size={16} aria-hidden="true" />
+        <div className="mt-10 flex w-full flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+          <Button asChild size="lg" className="w-full sm:w-auto">
+            <a href={`mailto:${profile.email}`} className="max-w-full break-all sm:break-normal">
+              <Mail size={16} aria-hidden="true" className="shrink-0" />
               {profile.email}
             </a>
           </Button>
-          <Button asChild size="lg" variant="outline">
+          <Button asChild size="lg" variant="outline" className="w-full sm:w-auto">
             <a
               href={profile.resumePath}
               download="Malcolm_Joaquin_Cuady_Resume.pdf"
@@ -48,12 +48,12 @@ export default function Footer() {
           </Button>
         </div>
 
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-6 text-sm text-soft">
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-soft">
           <a
             href={profile.linkedin}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 transition-colors hover:text-mist"
+            className="inline-flex min-h-11 items-center gap-2 transition-colors hover:text-mist"
           >
             <FaLinkedin size={16} aria-hidden="true" />
             LinkedIn
@@ -62,15 +62,18 @@ export default function Footer() {
             href={profile.github}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 transition-colors hover:text-mist"
+            className="inline-flex min-h-11 items-center gap-2 transition-colors hover:text-mist"
           >
             <FaGithub size={16} aria-hidden="true" />
             {profile.githubUser}
           </a>
-          <span className="inline-flex items-center gap-2">
+          <a
+            href={`tel:${profile.phone.replace(/\s+/g, "")}`}
+            className="inline-flex min-h-11 items-center gap-2 transition-colors hover:text-mist"
+          >
             <Phone size={14} aria-hidden="true" />
             {profile.phone}
-          </span>
+          </a>
         </div>
 
         <Separator className="mx-auto mt-16 max-w-md" />

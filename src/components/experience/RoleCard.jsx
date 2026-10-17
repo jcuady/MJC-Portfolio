@@ -53,35 +53,29 @@ export default function RoleCard({
             Step {step}
           </span>
         </div>
-        {mode === "desktop" ? (
-          <div className="xp-role-card__pager">
-            <button
-              type="button"
-              className="xp-pager-btn"
-              aria-label="Previous role"
-              onClick={onPrev}
-              disabled={index === 0}
-            >
-              <ChevronLeft size={16} strokeWidth={1.75} aria-hidden="true" />
-            </button>
-            <span className="xp-counter font-mono text-xs tracking-[0.14em] text-forest">
-              {step} / {totalLabel}
-            </span>
-            <button
-              type="button"
-              className="xp-pager-btn"
-              aria-label="Next role"
-              onClick={onNext}
-              disabled={index === total - 1}
-            >
-              <ChevronRight size={16} strokeWidth={1.75} aria-hidden="true" />
-            </button>
-          </div>
-        ) : (
+        <div className="xp-role-card__pager">
+          <button
+            type="button"
+            className="xp-pager-btn"
+            aria-label="Previous role"
+            onClick={onPrev}
+            disabled={index === 0 || !onPrev}
+          >
+            <ChevronLeft size={16} strokeWidth={1.75} aria-hidden="true" />
+          </button>
           <span className="xp-counter font-mono text-xs tracking-[0.14em] text-forest">
             {step} / {totalLabel}
           </span>
-        )}
+          <button
+            type="button"
+            className="xp-pager-btn"
+            aria-label="Next role"
+            onClick={onNext}
+            disabled={index === total - 1 || !onNext}
+          >
+            <ChevronRight size={16} strokeWidth={1.75} aria-hidden="true" />
+          </button>
+        </div>
       </header>
 
       <h3 className="xp-role-card__title">

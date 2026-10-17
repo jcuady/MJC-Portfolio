@@ -49,7 +49,7 @@ export default function GitHubSection() {
                 </a>
               </div>
 
-              <div className="mt-6 overflow-x-auto rounded-xl border border-deep/70 bg-obsidian p-3 sm:p-4">
+              <div className="github-chart mt-6 overflow-x-auto overscroll-x-contain rounded-xl border border-deep/70 bg-obsidian p-3 sm:p-4">
                 {chartFailed ? (
                   <p className="py-8 text-center font-mono text-sm text-soft">
                     Graph unavailable — view the live chart on{" "}
@@ -57,7 +57,7 @@ export default function GitHubSection() {
                       href={profile.github}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-mint underline"
+                      className="inline-flex min-h-11 items-center text-mint underline"
                     >
                       GitHub
                     </a>
@@ -69,8 +69,9 @@ export default function GitHubSection() {
                     src={`https://ghchart.rshah.org/${chartColor}/${profile.githubUser}`}
                     alt={`${profile.short}'s GitHub contribution graph`}
                     loading="lazy"
+                    decoding="async"
                     onError={() => setChartFailed(true)}
-                    className="min-w-[560px] sm:min-w-[640px]"
+                    className="github-chart__img"
                   />
                 )}
               </div>

@@ -14,16 +14,20 @@ export default function TimelineRail({
       <div className="xp-mobile-rail" role="tablist" aria-label="Career steps">
         {career.map((job, i) => {
           const active = i === activeIndex;
+          const shortOrg =
+            job.org.length > 18 ? `${job.org.slice(0, 16).trim()}…` : job.org;
           return (
             <button
               key={job.org + job.period}
               type="button"
               role="tab"
               aria-selected={active}
+              aria-label={`Step ${String(i + 1).padStart(2, "0")}: ${job.org}`}
               className={cn("xp-mobile-step", active && "is-active")}
               onClick={() => onSelect?.(i)}
             >
               <span className="xp-mobile-step__num">{String(i + 1).padStart(2, "0")}</span>
+              <span className="xp-mobile-step__org">{shortOrg}</span>
               <span className="xp-mobile-step__date">{job.yearLabel || job.period}</span>
             </button>
           );

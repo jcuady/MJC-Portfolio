@@ -39,9 +39,9 @@ export default function ProfileCard() {
       <div className="profile-card__avail">
         <p>
           <span className="hero-pill__dot" aria-hidden="true" />
-          Open to opportunities
+          EastWest Bank
         </p>
-        <span>Full-time · Contract · Project-based</span>
+        <span>Digital Systems Development Officer · Junior Officer</span>
       </div>
     </article>
   );

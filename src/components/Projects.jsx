@@ -18,15 +18,17 @@ function ProjectCard({ project, index }) {
 
   return (
     <article className="proj-card h-full">
-      <Wrapper {...wrapperProps} className="group block h-full">
+      <Wrapper {...wrapperProps} className="group block h-full min-w-0">
         <Card className="h-full overflow-hidden transition-colors duration-200 hover:border-mint/55">
           <SitePreview project={project} className="aspect-[16/10] border-b border-deep/70" />
-          <CardContent className="p-5 sm:p-6">
-            <div className="flex items-center justify-between gap-3">
+          <CardContent className="p-4 sm:p-6">
+            <div className="flex min-w-0 items-start justify-between gap-2">
               <span className="font-mono text-xs tracking-[0.16em] text-forest">
                 {project.index}
               </span>
-              <Badge variant="default">{project.status}</Badge>
+              <Badge variant="default" className="max-w-[60%] shrink truncate text-left">
+                {project.status}
+              </Badge>
             </div>
             <div className="mt-3 flex items-start justify-between gap-3">
               <div className="min-w-0">
@@ -43,7 +45,7 @@ function ProjectCard({ project, index }) {
                 />
               ) : null}
             </div>
-            <p className="mt-3 text-sm leading-relaxed text-soft">{project.desc}</p>
+            <p className="proj-card__desc mt-3 text-sm leading-relaxed text-soft">{project.desc}</p>
             <div className="mt-4 flex flex-wrap gap-2">
               {project.stack.map((t) => (
                 <Badge key={t} variant="outline">
@@ -67,11 +69,11 @@ function FeaturedCase({ project, index }) {
 
   return (
     <article
-      className={`feat-case grid items-center gap-6 overflow-hidden md:grid-cols-2 md:gap-10 lg:gap-14 ${
+      className={`feat-case grid min-w-0 items-center gap-4 overflow-hidden sm:gap-6 md:grid-cols-2 md:gap-10 lg:gap-14 ${
         flip ? "md:[&>*:first-child]:order-2" : ""
       }`}
     >
-      <div>
+      <div className="min-w-0">
         <Wrapper {...wrapperProps} className="group block">
           <div className="overflow-hidden rounded-2xl border border-deep/70 bg-night/40 shadow-[0_24px_60px_-40px_rgba(13,28,21,0.55)] transition-colors duration-200 group-hover:border-mint/50">
             <SitePreview
@@ -84,7 +86,7 @@ function FeaturedCase({ project, index }) {
       </div>
 
       <div className={`feat-copy min-w-0 ${flip ? "md:text-right" : ""}`}>
-        <p className="eyebrow">{project.accent || "Unique engagement"}</p>
+        <p className="eyebrow feat-case__accent">{project.accent || "Unique engagement"}</p>
         <div className={`mt-3 flex flex-wrap items-center gap-2 ${flip ? "md:justify-end" : ""}`}>
           {project.logo ? (
             <span className="feat-case__logo" aria-hidden="true">
@@ -92,20 +94,22 @@ function FeaturedCase({ project, index }) {
             </span>
           ) : null}
           <span className="font-mono text-xs tracking-[0.16em] text-forest">{project.index}</span>
-          <Badge variant="default">{project.status}</Badge>
+          <Badge variant="default" className="max-w-full truncate">
+            {project.status}
+          </Badge>
         </div>
-        <h3 className="mt-3 font-display text-2xl font-bold tracking-tight text-mist sm:text-3xl lg:text-[2.1rem]">
+        <h3 className="feat-case__title mt-3 font-display text-[clamp(1.35rem,6vw,2.1rem)] font-bold tracking-tight text-mist sm:text-3xl lg:text-[2.1rem]">
           {project.name}
         </h3>
         <p className="mt-1 text-sm font-medium text-soft sm:text-base">{project.kind}</p>
         <p
-          className={`mt-4 max-w-lg text-sm leading-relaxed text-soft sm:text-[15px] ${
+          className={`feat-case__desc mt-3 max-w-lg text-sm leading-relaxed text-soft sm:mt-4 sm:text-[15px] ${
             flip ? "md:ml-auto" : ""
           }`}
         >
           {project.desc}
         </p>
-        <div className={`mt-5 flex flex-wrap gap-2 ${flip ? "md:justify-end" : ""}`}>
+        <div className={`mt-4 flex flex-wrap gap-2 sm:mt-5 ${flip ? "md:justify-end" : ""}`}>
           {project.stack.map((t) => (
             <Badge key={t} variant="outline">
               {t}
@@ -117,8 +121,8 @@ function FeaturedCase({ project, index }) {
             href={project.url}
             target="_blank"
             rel="noreferrer"
-            className={`mt-6 inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-mist transition-colors hover:text-mint ${
-              flip ? "md:flex-row-reverse" : ""
+            className={`feat-case__cta mt-5 inline-flex min-h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-full border border-deep/80 bg-obsidian/30 px-5 text-sm font-medium text-mist transition-colors hover:border-mint/50 hover:text-mint sm:mt-6 sm:w-auto sm:justify-start sm:border-0 sm:bg-transparent sm:px-0 ${
+              flip ? "md:ml-auto md:flex-row-reverse" : ""
             }`}
           >
             Visit live site
@@ -173,12 +177,12 @@ export default function Projects() {
           Shipped work&nbsp;&nbsp;[ {String(projects.length).padStart(2, "0")} ]
         </p>
         <h2 className="section-title mt-3 max-w-2xl">
-          Unique client systems — and every project on the resume.
+          Latest products — and every system I have shipped.
         </h2>
         <p className="section-lead max-w-2xl">
-          Kadokohi, Offgrid, and MGC Architecture are standalone engagements — different
-          industries, different problems, solo-owned. Below that: every other production
-          surface from the resume, including NDA platform work.
+          September–October 2026: Pickle Nation, Lasa, Liko, Likha, and Tuko — solo-owned
+          builds across booking, F&amp;B ordering, edtech, proptech, and home services.
+          Below that: earlier client platforms and NDA suite work.
         </p>
 
         <div className="feat-list mt-10 space-y-12 sm:mt-12 sm:space-y-14 lg:space-y-16">

@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -29,6 +29,13 @@ export default function Experience() {
     activeRef.current = next;
     setActiveIndex(next);
   }, [n]);
+
+  useEffect(() => {
+    const rail = rootRef.current?.querySelector(".xp-mobile-rail");
+    const step = rail?.querySelector(".xp-mobile-step.is-active");
+    if (!rail || !step) return;
+    step.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+  }, [activeIndex]);
 
   const scrollToStep = useCallback(
     (idx) => {
@@ -300,15 +307,15 @@ export default function Experience() {
       </div>
 
       {/* Mobile / compact: horizontal steps + stacked story */}
-      <div className="wrap xp-mobile py-10 min-[900px]:hidden">
+      <div className="wrap xp-mobile min-[900px]:hidden">
         <p className="eyebrow">Career journey</p>
         <h2 className="section-title mt-2">Experience</h2>
         <p className="section-lead">
-          Latest first — matching the resume. Kadokohi, Offgrid, and MGC Architecture each own a
-          step.
+          Latest first. EastWest Bank, then the Sept–Oct product suite, then earlier studio and
+          client roles.
         </p>
 
-        <div className="mt-5">
+        <div className="xp-mobile-rail-wrap mt-5">
           <TimelineRail
             career={career}
             activeIndex={activeIndex}
@@ -317,9 +324,16 @@ export default function Experience() {
           />
         </div>
 
-        <div className="xp-mobile-stack mt-5 space-y-4">
+        <div className="xp-mobile-stack mt-4 space-y-3.5">
           <div className="xp-m-enter">
-            <RoleCard job={activeJob} index={activeIndex} total={n} mode="mobile" />
+            <RoleCard
+              job={activeJob}
+              index={activeIndex}
+              total={n}
+              mode="mobile"
+              onPrev={() => setActive(activeIndex - 1)}
+              onNext={() => setActive(activeIndex + 1)}
+            />
           </div>
           <div className="xp-m-enter">
             <SnapshotCard job={activeJob} />
@@ -330,19 +344,23 @@ export default function Experience() {
         </div>
 
         {/* Full list for verify + a11y parity */}
-        <div className="mt-10 space-y-6 border-t border-deep/70 pt-8">
-          <p className="font-mono text-xs uppercase tracking-[0.16em] text-forest">All roles</p>
-          {career.map((job, i) => (
-            <RoleCard
-              key={`list-${job.role}-${job.org}`}
-              job={job}
-              index={i}
-              total={n}
-              mode="mobile"
-              className="xp-m-card"
-            />
-          ))}
-        </div>
+        <details className="xp-all-roles mt-8 border-t border-deep/70 pt-6">
+          <summary className="xp-all-roles__summary">
+            All roles ({String(n).padStart(2, "0")})
+          </summary>
+          <div className="mt-4 space-y-4">
+            {career.map((job, i) => (
+              <RoleCard
+                key={`list-${job.role}-${job.org}`}
+                job={job}
+                index={i}
+                total={n}
+                mode="mobile"
+                className="xp-m-card"
+              />
+            ))}
+          </div>
+        </details>
       </div>
     </section>
   );

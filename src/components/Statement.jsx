@@ -69,20 +69,21 @@ export default function Statement() {
           </div>
         </div>
 
-        <div className="wrap mt-8 flex w-full flex-col gap-3 sm:mt-10 sm:flex-row sm:items-center">
+        <div className="wrap mt-8 flex w-full flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center">
           <Button
             type="button"
             size="lg"
+            className="w-full sm:w-auto"
             onClick={() => setConsultOpen(true)}
             data-testid="consult-cta"
           >
             Book a consultation
             <ArrowRight size={16} aria-hidden="true" />
           </Button>
-          <Button asChild variant="outline" size="lg">
+          <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
             <a href="#work">See shipped work</a>
           </Button>
-          <p className="text-xs leading-relaxed text-soft sm:ml-2 sm:max-w-xs">
+          <p className="text-sm leading-relaxed text-soft sm:ml-2 sm:max-w-xs sm:text-xs">
             Demo a live system or plan a transformation for the ops you want to scale.
           </p>
         </div>
