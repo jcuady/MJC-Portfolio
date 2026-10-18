@@ -267,8 +267,8 @@ export default function Experience() {
                 <p className="eyebrow">Career journey</p>
                 <h2 className="section-title mt-2">Experience</h2>
                 <p className="section-lead xp-intro__lead">
-                  Latest first — matching the resume. Each role is its own step, including Kadokohi,
-                  Offgrid, and MGC Architecture.
+                  Latest first — matching the resume. Employer and client roles only; Pickle Nation,
+                  Lasa, Liko, Likha, and Tuko are in Work.
                 </p>
               </div>
               <div className="xp-intro__art" aria-hidden="true">
@@ -344,8 +344,8 @@ export default function Experience() {
           <p className="eyebrow">Career journey</p>
           <h2 className="section-title mt-2">Experience</h2>
           <p className="section-lead">
-            Latest first. EastWest Bank, then the Sept–Oct product suite, then earlier studio and
-            client roles. Swipe the card or tap a step to move.
+            Latest first — EastWest Bank, then studio and client roles. Shipped products (Pickle
+            Nation, Lasa, Liko, Likha, Tuko) live in Work. Swipe the card or tap a step to move.
           </p>
         </header>
 

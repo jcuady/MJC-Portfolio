@@ -14,11 +14,8 @@ export default function TimelineRail({
       <div className="xp-mobile-rail" role="tablist" aria-label="Career steps">
         {career.map((job, i) => {
           const active = i === activeIndex;
-          const shortOrg = job.org.startsWith("Product suite")
-            ? "Sept–Oct suite"
-            : job.org.length > 24
-              ? `${job.org.slice(0, 22).trim()}…`
-              : job.org;
+          const shortOrg =
+            job.org.length > 24 ? `${job.org.slice(0, 22).trim()}…` : job.org;
           return (
             <button
               key={job.org + job.period}
