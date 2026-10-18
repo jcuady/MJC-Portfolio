@@ -4198,19 +4198,52 @@ html.dark .xp-snap__tech-icon,
   color: var(--muted);
 }
 
-/* Mobile step rail */
+/* Mobile Experience shell */
+.xp-mobile {
+  overflow-x: clip;
+  padding-block: 2.25rem 2.75rem;
+  padding-bottom: calc(2.75rem + env(safe-area-inset-bottom, 0px));
+}
+
+.xp-mobile__intro .section-lead {
+  max-width: 38rem;
+}
+
+.xp-mobile-stack {
+  display: grid;
+  gap: 0.9rem;
+  min-width: 0;
+  margin-top: 1rem;
+  touch-action: pan-y;
+}
+
+.xp-m-card.xp-role-card,
+.xp-mobile .xp-role-card {
+  overflow: visible;
+}
+
+/* Mobile step rail — sticky under fixed nav */
 .xp-mobile-rail-wrap {
-  position: relative;
-  margin-inline: -0.15rem;
+  position: sticky;
+  top: calc(64px + env(safe-area-inset-top, 0px));
+  z-index: 20;
+  margin-inline: -0.35rem;
+  margin-top: 1.15rem;
+  padding: 0.45rem 0.35rem 0.35rem;
+  border-radius: 0 0 1rem 1rem;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 8%, transparent);
 }
 
 .xp-mobile-rail-wrap::after {
   content: "";
   position: absolute;
-  top: 0;
+  top: 0.45rem;
   right: 0;
-  bottom: 0.45rem;
-  width: 1.75rem;
+  bottom: 1.55rem;
+  width: 1.85rem;
   pointer-events: none;
   background: linear-gradient(90deg, transparent, var(--bg));
   z-index: 1;
@@ -4218,37 +4251,62 @@ html.dark .xp-snap__tech-icon,
 
 .xp-mobile-rail {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.55rem;
   overflow-x: auto;
-  padding: 0.2rem 1.25rem 0.55rem 0.15rem;
+  padding: 0.15rem 1.35rem 0.4rem 0.2rem;
   scroll-snap-type: x mandatory;
-  scroll-padding-inline: 0.25rem;
+  scroll-padding-inline: 0.35rem;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
-  scrollbar-width: thin;
+  scrollbar-width: none;
+  touch-action: pan-x;
+}
+
+.xp-mobile-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.xp-mobile-rail__hint {
+  display: flex;
+  align-items: center;
+  gap: 0.28rem;
+  margin: 0.15rem 0.2rem 0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.xp-mobile-rail__hint-label {
+  margin-left: 0.15rem;
+  letter-spacing: 0.14em;
 }
 
 .xp-mobile-step {
   flex: 0 0 auto;
   scroll-snap-align: start;
   display: grid;
-  gap: 0.12rem;
-  min-width: 6.75rem;
-  max-width: 8.5rem;
+  gap: 0.14rem;
+  min-width: 7.25rem;
+  max-width: 9.25rem;
   min-height: 52px;
-  padding: 0.55rem 0.7rem;
-  border-radius: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 0.85rem;
   border: 1px solid color-mix(in srgb, var(--fg) 10%, transparent);
   background: transparent;
   color: var(--soft);
   cursor: pointer;
   text-align: left;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .xp-mobile-step.is-active {
   border-color: color-mix(in srgb, var(--accent) 45%, transparent);
   background: color-mix(in srgb, var(--accent) 12%, transparent);
   color: var(--fg);
+  box-shadow: 0 10px 24px -18px var(--shadow);
 }
 
 .xp-mobile-step__num {
@@ -4258,13 +4316,16 @@ html.dark .xp-snap__tech-icon,
 }
 
 .xp-mobile-step__org {
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   font-weight: 650;
-  line-height: 1.2;
+  line-height: 1.25;
   color: inherit;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .xp-mobile-step__date {
@@ -4317,6 +4378,10 @@ html.dark .xp-snap__tech-icon,
 }
 
 @media (max-width: 899px) {
+  #experience {
+    overflow-x: clip;
+  }
+
   .xp-bottom {
     grid-template-columns: 1fr;
   }
@@ -4327,6 +4392,7 @@ html.dark .xp-snap__tech-icon,
 
   .xp-snap {
     height: auto;
+    min-width: 0;
   }
 
   .xp-snap__frame {
@@ -4334,28 +4400,61 @@ html.dark .xp-snap__tech-icon,
     min-height: 10.5rem;
   }
 
+  .xp-snap__tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
   .xp-snap__tech-chip {
     min-height: 44px;
+    max-width: 100%;
+  }
+
+  .xp-snap__tech-chip span {
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
 
   .xp-snap__title {
     min-height: 44px;
     align-items: center;
+    overflow-wrap: anywhere;
+  }
+
+  .xp-snap__desc {
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+  }
+
+  .xp-role-card__org-row {
+    flex-wrap: wrap;
+    row-gap: 0.45rem;
+  }
+
+  .xp-role-card__logo {
+    width: 4.5rem;
+    height: 2.5rem;
+    padding: 0.2rem 0.4rem;
   }
 
   .xp-role-card__org {
     min-height: 44px;
+    overflow-wrap: anywhere;
   }
 
   .xp-role-card__title {
-    font-size: clamp(1.15rem, 5.2vw, 1.45rem);
+    font-size: clamp(1.2rem, 5.4vw, 1.5rem);
+    text-wrap: balance;
     overflow-wrap: anywhere;
   }
 
   .xp-role-card__summary,
   .xp-role-card__points li {
-    font-size: 0.9375rem;
+    font-size: 1rem;
     line-height: 1.55;
+    overflow-wrap: anywhere;
   }
 
   .xp-role-card__meta {
@@ -4367,12 +4466,27 @@ html.dark .xp-snap__tech-icon,
     overflow-wrap: anywhere;
   }
 
-  .xp-mobile {
-    padding-block: 2.25rem 2.75rem;
+  .xp-role-card__tech,
+  .xp-caps__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
   }
 
-  .xp-mobile-stack {
-    min-width: 0;
+  .xp-tech-pill,
+  .xp-cap-pill {
+    max-width: 100%;
+    white-space: nowrap;
+  }
+
+  .xp-pager-btn {
+    width: 48px;
+    height: 48px;
+    touch-action: manipulation;
+  }
+
+  .xp-mobile-step {
+    min-height: 56px;
   }
 }
 
@@ -4382,11 +4496,16 @@ html.dark .xp-snap__tech-icon,
   }
 
   .xp-snap__tech {
-    gap: 0.3rem;
+    gap: 0.35rem;
   }
 
   .xp-mobile-step {
-    min-width: 6.25rem;
+    min-width: 6.75rem;
+    max-width: 8.75rem;
+  }
+
+  .xp-mobile-rail-wrap {
+    margin-inline: -0.55rem;
   }
 }
 
@@ -4778,13 +4897,13 @@ html.dark .xp-snap__tech-icon,
   }
 
   .xp-mobile {
-    padding-block: 2.5rem 3rem;
+    padding-block: 2.5rem calc(3rem + env(safe-area-inset-bottom, 0px));
   }
 
   .xp-role-card__summary,
   .xp-role-card__points li,
   .xp-snap__desc {
-    font-size: 0.9375rem;
+    font-size: 1rem;
     line-height: 1.55;
   }
 

@@ -37,6 +37,38 @@ export default function Experience() {
     step.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
   }, [activeIndex]);
 
+  /* Mobile: horizontal swipe between roles (touch only). */
+  useEffect(() => {
+    const stack = rootRef.current?.querySelector(".xp-mobile-stack");
+    if (!stack) return;
+    let x0 = 0;
+    let y0 = 0;
+    let tracking = false;
+
+    const onStart = (e) => {
+      if (e.touches.length !== 1) return;
+      tracking = true;
+      x0 = e.touches[0].clientX;
+      y0 = e.touches[0].clientY;
+    };
+    const onEnd = (e) => {
+      if (!tracking || !e.changedTouches?.[0]) return;
+      tracking = false;
+      const dx = e.changedTouches[0].clientX - x0;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dx) < 56 || Math.abs(dx) < Math.abs(dy) * 1.35) return;
+      if (dx < 0) setActive(activeRef.current + 1);
+      else setActive(activeRef.current - 1);
+    };
+
+    stack.addEventListener("touchstart", onStart, { passive: true });
+    stack.addEventListener("touchend", onEnd, { passive: true });
+    return () => {
+      stack.removeEventListener("touchstart", onStart);
+      stack.removeEventListener("touchend", onEnd);
+    };
+  }, [setActive]);
+
   const scrollToStep = useCallback(
     (idx) => {
       const st = stRef.current || ScrollTrigger.getById("career");
@@ -306,25 +338,36 @@ export default function Experience() {
         </div>
       </div>
 
-      {/* Mobile / compact: horizontal steps + stacked story */}
+      {/* Mobile / compact: sticky step rail + stacked story */}
       <div className="wrap xp-mobile min-[900px]:hidden">
-        <p className="eyebrow">Career journey</p>
-        <h2 className="section-title mt-2">Experience</h2>
-        <p className="section-lead">
-          Latest first. EastWest Bank, then the Sept–Oct product suite, then earlier studio and
-          client roles.
-        </p>
+        <header className="xp-mobile__intro">
+          <p className="eyebrow">Career journey</p>
+          <h2 className="section-title mt-2">Experience</h2>
+          <p className="section-lead">
+            Latest first. EastWest Bank, then the Sept–Oct product suite, then earlier studio and
+            client roles. Swipe the card or tap a step to move.
+          </p>
+        </header>
 
-        <div className="xp-mobile-rail-wrap mt-5">
+        <div className="xp-mobile-rail-wrap">
           <TimelineRail
             career={career}
             activeIndex={activeIndex}
             onSelect={setActive}
             variant="mobile"
           />
+          <p className="xp-mobile-rail__hint" aria-hidden="true">
+            <span>{String(activeIndex + 1).padStart(2, "0")}</span>
+            <span>/</span>
+            <span>{String(n).padStart(2, "0")}</span>
+            <span className="xp-mobile-rail__hint-label">roles</span>
+          </p>
         </div>
 
-        <div className="xp-mobile-stack mt-4 space-y-3.5">
+        <div
+          className="xp-mobile-stack"
+          key={activeJob.org + activeJob.period}
+        >
           <div className="xp-m-enter">
             <RoleCard
               job={activeJob}
